@@ -15,11 +15,9 @@ public class Hello {
 
     @RequestMapping("/login")
     public String index(String nickname, String contact_information) {
-        System.out.println("用户名为：" + nickname);
-        System.out.println("联系方式为：" + contact_information);
         int count = userDao.getUserByLoginName(nickname, contact_information);
         if (count>0)
-            return "ok";
+            return "你是个傻逼";
         return "no";
     }
 }

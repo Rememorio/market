@@ -1,0 +1,76 @@
+package com.newbee.maggie.entity;
+
+public class User {
+    //用户id
+    private Integer userId;
+    //微信生成的session_key
+    private String sessionKey;
+    //联系信息：手机号
+    private String contactInformation;
+    //昵称
+    private String nickname;
+    //默认地址
+    private Integer defaultShippingAddress;
+    //学院
+    private String department;
+    //年级
+    private Integer grade;
+
+    //set用户id
+    public void setUserId(Integer userId){
+        this.userId = userId;
+    }
+    //get用户id
+    public Integer getUserId(){
+        return this.userId;
+    }
+    //setSessionKey
+    public void setSessionKey(String sessionKey){
+        this.sessionKey = sessionKey;
+    }
+    //getSessionKey
+    public String getSessionKey(){
+        return this.sessionKey;
+    }
+    //set手机号
+    public void setContactInformation(String contactInformation){
+        this.contactInformation = contactInformation;
+    }
+    //get手机号
+    public String getContactInformation(){
+        return this.contactInformation;
+    }
+    //set昵称
+    public void setNickname(String nickname){
+        this.nickname = nickname;
+    }
+    //get昵称
+    public String getNickname(){
+        return this.nickname;
+    }
+    //set默认地址
+    public void setDefaultShippingAddress(Integer defaultShippingAddress){
+        this.defaultShippingAddress = defaultShippingAddress;
+    }
+    //get默认地址
+    public Integer getDefaultShippingAddress(){
+        return this.defaultShippingAddress;
+    }
+    //set学院
+    public void setDepartment(String department){
+        this.department = department;
+    }
+    //get学院
+    public String getDepartment(){
+        return this.department;
+    }
+    //set年级
+    public void setGrade(Integer grade){
+        this.grade = grade;
+    }
+    //get年级
+    public Integer getGrade(){
+        return this.grade;
+    }
+
+}
