@@ -1,6 +1,19 @@
 package com.newbee.maggie.entity;
 
 public class User {
+    public User(Integer userId, String sessionKey, String contactInformation,
+                String nickname, Integer defaultShippingAddress, String department, Integer grade){
+        this.userId = userId;
+        this.sessionKey = sessionKey;
+        this.contactInformation = contactInformation;
+        this.nickname = nickname;
+        this.defaultShippingAddress = defaultShippingAddress;
+        this.department = department;
+        this.grade = grade;
+    }
+    public User(String nickname){
+        this.nickname = nickname;
+    }
     //用户id
     private Integer userId;
     //微信生成的session_key
@@ -73,4 +86,17 @@ public class User {
         return this.grade;
     }
 
+    //重写toString方法
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", sessionKey='" + sessionKey + '\'' +
+                ", contactInformation='" + contactInformation + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", defaultShippingAddress=" + defaultShippingAddress +
+                ", department='" + department + '\'' +
+                ", grade=" + grade +
+                '}';
+    }
 }

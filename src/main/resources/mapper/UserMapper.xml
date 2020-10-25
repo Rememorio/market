@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.newbee.maggie.dao.UserDao">
-    <select id="getUserByLoginName" resultType="java.lang.Integer">
-    select count(*) from user
-    where nickname = #{nickname} and contact_information = #{contact_information};
-  </select>
+<mapper namespace="com.newbee.maggie.mapper.UserMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
+    <select id="findUserByUsername" resultType="com.newbee.maggie.entity.User"><!--编写sql语句-->
+		SELECT *
+		FROM user
+		WHERE nickname = #{nickname}
+	</select>
 </mapper>
