@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     public Map<String, Object> exceptionHandler(HttpServletRequest req, Exception e) throws Exception {
         Map<String, Object> modelMap = new HashMap<String, Object>();
         modelMap.put("success", false);
-        modelMap.put("errMsg", e.getMessage());
+        modelMap.put("errorMsg", e.getMessage());
         return modelMap;
     }
 

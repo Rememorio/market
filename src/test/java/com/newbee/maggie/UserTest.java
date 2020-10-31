@@ -2,6 +2,8 @@ package com.newbee.maggie;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newbee.maggie.entity.User;
+import com.newbee.maggie.mapper.UserMapper;
 import com.newbee.maggie.web.ApiResult;
 import org.junit.jupiter.api.Test;
 
@@ -20,4 +22,5 @@ public class UserTest {
         ApiResult src = objectMapper.readValue(rs, ApiResult.class);
         System.out.println(src);
     }
+
 }

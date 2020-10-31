@@ -2,7 +2,7 @@ package com.newbee.maggie.entity;
 
 public class User {
     public User(Integer userId, String sessionKey, String contactInformation,
-                String nickname, Integer defaultShippingAddress, String department, Integer grade){
+                String nickname, Integer defaultShippingAddress, String department, Integer grade, int authority){
         this.userId = userId;
         this.sessionKey = sessionKey;
         this.contactInformation = contactInformation;
@@ -10,6 +10,7 @@ public class User {
         this.defaultShippingAddress = defaultShippingAddress;
         this.department = department;
         this.grade = grade;
+        this.authority = authority;
     }
     public User(String nickname){
         this.nickname = nickname;
@@ -28,6 +29,8 @@ public class User {
     private String department;
     //年级
     private Integer grade;
+    //权限
+    private int authority;
 
     //set用户id
     public void setUserId(Integer userId){
@@ -85,6 +88,13 @@ public class User {
     public Integer getGrade(){
         return this.grade;
     }
+    //set权限
+    public void setAuthority(int authority) {
+        this.authority = authority;
+    }    //get权限
+    public int getAuthority() {
+        return authority;
+    }
 
     //重写toString方法
     @Override
@@ -97,6 +107,7 @@ public class User {
                 ", defaultShippingAddress=" + defaultShippingAddress +
                 ", department='" + department + '\'' +
                 ", grade=" + grade +
+                ", authority=" + authority +
                 '}';
     }
 }

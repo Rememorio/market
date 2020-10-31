@@ -4,8 +4,42 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newbee.maggie.mapper.UserMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
     <select id="findUserByUsername" resultType="com.newbee.maggie.entity.User"><!--编写sql语句-->
-		SELECT *
+		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, department, grade, authority
 		FROM user
 		WHERE nickname = #{nickname}
 	</select>
+
+	<select id="findUserByUserId" resultType="com.newbee.maggie.entity.User">
+		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, department, grade, authority
+		FROM user
+		WHERE user_id = #{userId}
+	</select>
+	<!--
+	<insert id="insertUser" useGeneratedKeys="true" keyProperty="userId"
+			keyColumn="user_id" parameterType="com.newbee.maggie.entity.User">
+		INSERT INTO
+		user(user_id, session_key, contact_information, nickname, default_shipping_address, department, grade)
+		VALUES
+		(#{})
+		(#{areaName},#{priority},#{createTime},#{lastEditTime})
+	</insert>
+
+	<update id="updateUser" parameterType="com.newbee.maggie.entity.User">
+		update user
+		<set>
+
+			<if test="areaName != null">area_name=#{areaName},</if>
+			<if test="priority != null">priority=#{priority},</if>
+			<if test="lastEditTime != null">last_edit_time=#{lastEditTime}</if>
+		</set>
+		where area_id=#{areaId}
+	</update>
+
+	<delete id="deleteUser">
+		DELETE FROM
+		user
+		WHERE
+		user_id =#{userId}
+	</delete>
+	-->
 </mapper>

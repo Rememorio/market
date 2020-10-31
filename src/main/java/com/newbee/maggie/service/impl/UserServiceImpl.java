@@ -15,4 +15,11 @@ public class UserServiceImpl implements UserService {
     public User getUserByNickname(String nickname) {
         return userMapper.findUserByUsername(nickname);
     }
+
+    @Override
+    public User getUserByUserId(Integer userId) {
+        return userMapper.findUserByUserId(userId);
+    }
+
+
 }
