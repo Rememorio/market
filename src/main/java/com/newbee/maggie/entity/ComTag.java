@@ -1,12 +1,12 @@
 package com.newbee.maggie.entity;
 
-public class Com_Tag {
+public class ComTag {
     //商品id
     private Integer cmId;
     //tag
     private String tag;
 
-    public Com_Tag(Integer cmId, String tag) {
+    public ComTag(Integer cmId, String tag) {
         this.cmId = cmId;
         this.tag = tag;
     }
@@ -29,7 +29,7 @@ public class Com_Tag {
 
     @Override
     public String toString() {
-        return "Com_Tag{" +
+        return "ComTag{" +
                 "cmId=" + cmId +
                 ", tag='" + tag + '\'' +
                 '}';

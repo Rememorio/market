@@ -4,6 +4,7 @@ import com.newbee.maggie.entity.Commodity;
 import com.newbee.maggie.entity.User;
 import com.newbee.maggie.service.UserCenterService;
 import com.newbee.maggie.util.CommodityNotFoundException;
+import com.newbee.maggie.util.ParamNotFoundException;
 import com.newbee.maggie.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +24,18 @@ public class UserCenterController {
      * @return
      * @throws UserNotFoundException
      */
-    @RequestMapping(value = "/userInfoWithUserName", method = RequestMethod.POST)
-    private Map<String, Object> userInfoWithUserName(@RequestBody Map<String, String> usernameMap) throws UserNotFoundException {
-        String username = usernameMap.get("username");
+    @RequestMapping(value = "/userInfoByNickname", method = RequestMethod.POST)
+    private Map<String, Object> userInfoWithUserName(@RequestBody Map<String, String> usernameMap) throws ParamNotFoundException, UserNotFoundException {
+        String username = usernameMap.get("nickname");
+        if (username == null) {
+            throw new ParamNotFoundException("nickname参数为空");
+        }
         Map<String, Object> map = new HashMap<String, Object>();
         User user = userCenterService.getUserByNickname(username);
         if(user == null) {//如果没有这个用户，就抛出用户不存在的异常
             throw new UserNotFoundException("用户不存在");
         }
+        map.put("errorCode", 0);
         map.put("data", user);
         return map;
     }
@@ -41,14 +46,18 @@ public class UserCenterController {
      * @return
      * @throws UserNotFoundException
      */
-    @RequestMapping(value = "/userInfoWithUserId", method = RequestMethod.POST)
-    private  Map<String, Object> userInfoWithUserId(@RequestBody Map<String, Integer> userIdMap) throws UserNotFoundException {
-        Integer userId = userIdMap.get("user_id");
+    @RequestMapping(value = "/userInfoByUserId", method = RequestMethod.POST)
+    private  Map<String, Object> userInfoWithUserId(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException {
+        Integer userId = userIdMap.get("userId");
+        if (userId == null) {//如果没有userId信息
+            throw new ParamNotFoundException("userId参数为空");
+        }
         Map<String, Object> map = new HashMap<String, Object>();
         User user = userCenterService.getUserByUserId(userId);
         if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
             throw new UserNotFoundException("用户不存在");
         }
+        map.put("errorCode", 0);
         map.put("data", user);
         return map;
     }
@@ -64,45 +73,26 @@ public class UserCenterController {
 
     /**
      * 用户权限查询，是否具有管理员权限
-     * @param userId
+     * @param userIdMap
      * @return
      * @throws UserNotFoundException
      */
-    @RequestMapping(value = "/getIsAdmin", method = RequestMethod.GET)
-    private Map<String, Object> getIsAdmin(@RequestParam("userId") Integer userId) throws UserNotFoundException {
+    @RequestMapping(value = "/getIsAdmin", method = RequestMethod.POST)
+    private Map<String, Object> getIsAdmin(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException {
+        Integer userId = userIdMap.get("userId");
+        if (userId == null) {
+            throw new ParamNotFoundException("userId参数为空");
+        }
         Map<String, Object> map = new HashMap<String, Object>();
         User user = userCenterService.getUserByUserId(userId);
         if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
             throw new UserNotFoundException("用户不存在");
         }
         int authority = user.getAuthority();
-        Map<String, Object> auth = new HashMap<String, Object>();//封装用户权限信息
+        Map<String, Integer> auth = new HashMap<String, Integer>();//封装用户权限信息
         auth.put("authority", authority);
-        map.put("error_code", 0);
+        map.put("errorCode", 0);
         map.put("data", auth);
         return map;
     }
-
-    /**
-     * 根据商品id返回商品信息
-     * @param cmId
-     * @return
-     * @throws CommodityNotFoundException
-     */
-    @RequestMapping(value = "commodityInfo", method = RequestMethod.GET)
-    private Map<String, Object> commodityInfo(@RequestParam("cmId") Integer cmId) throws CommodityNotFoundException {
-        Map<String, Object> map = new HashMap<String, Object>();
-        Commodity commodity = userCenterService.getCommodityByCmId(cmId);
-        if (commodity == null) {
-            throw new CommodityNotFoundException("商品不存在");
-        }
-        map.put("data", commodity);
-        return map;
-    }
-
-//    @RequestMapping(value = "/userBookings", method = RequestMethod.GET)
-//    private Map<String, Object> userBookings(@RequestParam("user_id") Integer userId) {
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        return map;
-//    }
 }

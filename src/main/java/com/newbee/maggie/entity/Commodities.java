@@ -1,6 +1,8 @@
 package com.newbee.maggie.entity;
 
-public class Commodity {
+import java.util.Arrays;
+
+public class Commodities {
     //商品id
     private Integer cmId;
     //商品名称
@@ -22,7 +24,7 @@ public class Commodity {
      */
     private int address;
     //图片url
-    private String pictureUrl;
+    private String[] pictureUrls;
     //上传时间
     private String date;
     //是否全新
@@ -36,18 +38,18 @@ public class Commodity {
      */
     private int state;
 
-    public Commodity(Integer cmId, String name, int classify, String details, float price, Integer userId, int address, String pictureUrl, String date, int isNew, int state) {
-        this.cmId = cmId;
-        this.name = name;
-        this.classify = classify;
-        this.details = details;
-        this.price = price;
-        this.userId = userId;
-        this.address = address;
-        this.pictureUrl = pictureUrl;
-        this.date = date;
-        this.isNew = isNew;
-        this.state = state;
+    public Commodities(Commodity commodity, String[] pictureUrls) {
+        this.pictureUrls = pictureUrls;
+        this.address = commodity.getAddress();
+        this.classify = commodity.getClassify();
+        this.cmId = commodity.getCmId();
+        this.date = commodity.getDate();
+        this.details = commodity.getDetails();
+        this.isNew = commodity.getIsNew();
+        this.name = commodity.getName();
+        this.price = commodity.getPrice();
+        this.state = commodity.getState();
+        this.userId = commodity.getUserId();
     }
 
     public Integer getCmId() {
@@ -106,12 +108,12 @@ public class Commodity {
         this.address = address;
     }
 
-    public String getPictureUrl() {
-        return pictureUrl;
+    public String[] getPictureUrls() {
+        return pictureUrls;
     }
 
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
+    public void setPictureUrls(String[] pictureUrls) {
+        this.pictureUrls = pictureUrls;
     }
 
     public String getDate() {
@@ -140,7 +142,7 @@ public class Commodity {
 
     @Override
     public String toString() {
-        return "Commodity{" +
+        return "Commodities{" +
                 "cmId=" + cmId +
                 ", name='" + name + '\'' +
                 ", classify=" + classify +
@@ -148,7 +150,7 @@ public class Commodity {
                 ", price=" + price +
                 ", userId=" + userId +
                 ", address=" + address +
-                ", pictureUrl='" + pictureUrl + '\'' +
+                ", pictureUrls=" + Arrays.toString(pictureUrls) +
                 ", date='" + date + '\'' +
                 ", isNew=" + isNew +
                 ", state=" + state +

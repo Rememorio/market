@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 统一异常处理类
- *
- * @author xiangze
- *
  */
 @ControllerAdvice    //跟前端做交互
 public class GlobalExceptionHandler {
@@ -24,7 +21,7 @@ public class GlobalExceptionHandler {
     //编写异常处理方法
     public Map<String, Object> exceptionHandler(HttpServletRequest req, Exception e) throws Exception {
         Map<String, Object> modelMap = new HashMap<String, Object>();
-        modelMap.put("success", false);
+        modelMap.put("errorCode", 1);
         modelMap.put("errorMsg", e.getMessage());
         return modelMap;
     }
