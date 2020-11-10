@@ -24,6 +24,9 @@ public class User {
     //昵称
     private String nickname;
     //默认地址
+    /**
+     * 0-置空[不筛选地址]，1-大学城，2-五山，3-国际，4-其他
+     */
     private Integer defaultShippingAddress;
     //学院
     private String department;

@@ -19,13 +19,13 @@ public class UserCenterController {
 
     /**
      * 根据用户名返回用户信息
-     * @param username
+     * @param usernameMap
      * @return
      * @throws UserNotFoundException
      */
-    @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-    private Map<String, Object> userInfo(@RequestParam("nickname") String username) throws UserNotFoundException {
-        //System.out.println("username: " + username);
+    @RequestMapping(value = "/userInfoWithUserName", method = RequestMethod.POST)
+    private Map<String, Object> userInfoWithUserName(@RequestBody Map<String, String> usernameMap) throws UserNotFoundException {
+        String username = usernameMap.get("username");
         Map<String, Object> map = new HashMap<String, Object>();
         User user = userCenterService.getUserByNickname(username);
         if(user == null) {//如果没有这个用户，就抛出用户不存在的异常
@@ -37,13 +37,13 @@ public class UserCenterController {
 
     /**
      * 根据用户id返回用户信息
-     * @param userId
+     * @param userIdMap
      * @return
      * @throws UserNotFoundException
      */
-    @RequestMapping(value = "/userInfo/userId", method = RequestMethod.GET)
-    private  Map<String, Object> userInfo(@RequestParam("userId") Integer userId) throws UserNotFoundException {
-        //System.out.println("userId: " + userId);
+    @RequestMapping(value = "/userInfoWithUserId", method = RequestMethod.POST)
+    private  Map<String, Object> userInfoWithUserId(@RequestBody Map<String, Integer> userIdMap) throws UserNotFoundException {
+        Integer userId = userIdMap.get("user_id");
         Map<String, Object> map = new HashMap<String, Object>();
         User user = userCenterService.getUserByUserId(userId);
         if (user == null) {//如果没有这个用户，就抛出用户不存在的异常

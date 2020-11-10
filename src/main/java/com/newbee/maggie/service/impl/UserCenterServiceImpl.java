@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserCenterServiceImpl implements UserCenterService {
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private CommodityMapper commodityMapper;
 
