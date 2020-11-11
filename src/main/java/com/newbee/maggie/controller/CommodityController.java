@@ -43,7 +43,7 @@ public class CommodityController {
         if (pictureUrl.contains(",")) {//如果有","，即不止一个url
             String[] pictureUrls = pictureUrl.split(",");
             Commodities commodities = new Commodities(commodity, pictureUrls);
-            map.put("data", commodities);
+            map.put("commodityList", commodities);
             List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();
             for (int i = 0; i < pictureUrls.length; i++) {//逐一添加url
                 HashMap<String, Object> urlsMap = new HashMap<String, Object>();
@@ -55,7 +55,7 @@ public class CommodityController {
         } else {//没有","，即只有一个url
             String[] pictureUrls = new String[]{pictureUrl};
             Commodities commodities = new Commodities(commodity, pictureUrls);
-            map.put("data", commodities);
+            map.put("commodityList", commodities);
             List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();
             HashMap<String, Object> urlsMap = new HashMap<String, Object>();
             urlsMap.put("urlId", 0);//这里添加一个url就可以了

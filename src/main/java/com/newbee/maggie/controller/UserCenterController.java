@@ -65,6 +65,83 @@ public class UserCenterController {
         return map;
     }
 
+//    public String doPost(String url, Map<String,String> map) throws Exception {
+//        String result = null;
+//        HttpClient httpClient = new SSLClient();
+//        HttpPost httpPost = new HttpPost(url);
+//        //设置参数
+//        List<NameValuePair> list = new ArrayList<NameValuePair>();
+//        Iterator iterator = map.entrySet().iterator();
+//        while(iterator.hasNext()){
+//            Entry<String,String> elem = (Entry<String, String>) iterator.next();
+//            list.add(new BasicNameValuePair(elem.getKey(),elem.getValue()));
+//        }
+//        if(list.size() > 0){
+//            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, "UTF-8");
+//            httpPost.setEntity(entity);
+//        }
+//        HttpResponse response = httpClient.execute(httpPost);
+//        if(response != null){
+//            HttpEntity resEntity = response.getEntity();
+//            if(resEntity != null){
+//                result = EntityUtils.toString(resEntity, "UTF-8");
+//            }
+//        }
+//        return result;
+//    }
+//
+//    public String doGet(String url, Map<String,String> map) throws Exception{
+//        String result = null;
+//        HttpClient httpClient = new SSLClient();
+//        String param="";
+//        for(String nameKey:map.keySet()){
+//            param += nameKey+"="+map.get(nameKey)+"&";
+//        }
+//        param = param.substring(0,param.length()-1);
+//        String urlNameString = url + "?" + param;
+//        HttpGet httpGet = new HttpGet(urlNameString);
+//        HttpResponse response = httpClient.execute(httpGet);
+//        if(response != null){
+//            HttpEntity resEntity = response.getEntity();
+//            if(resEntity != null){
+//                result = EntityUtils.toString(resEntity, "UTF-8");
+//            }
+//        }
+//        return result;
+//    }
+
+//    private Map<String, Object> _getOpenId(String code){
+//        Map<String, Object> ret = new HashMap<>();
+//        // 组装参数*****
+//        Map<String, String> urlData= new HashMap<String, String>();
+//        urlData.put("appid",appid);//小程序id
+//        urlData.put("secret",appKey);//小程序key
+//        urlData.put("grant_type","authorization_code");//固定值这样写就行
+//        urlData.put("js_code",code);//小程序传过来的code
+//        HttpsClientUtil httpsClientUtil = new HttpsClientUtil();
+//        Object data_deserialize = null;
+//        try {
+//            //code2OpenidUrl "https://api.weixin.qq.com/sns/jscode2session";
+//            String dataStr = httpsClientUtil.doGet(code2OpenidUrl, urlData);
+//            data_deserialize = JSONUtil.deserialize(dataStr);
+//        }catch(Exception ex){
+//            ret.put("success", false);
+//            ret.put("msg", "_getOpenId_未知异常");
+//            ret.put("message", ex);
+//            return ret;
+//        }
+//        Map<String, String> data=  (Map<String, String>)data_deserialize;
+//        if( data.containsKey("errcode") ){
+//            ret.put("success", false);
+//            ret.put("msg", data.containsKey("errcode"));
+//            ret.put("message", data.containsKey("errmsg"));
+//        }else{
+//            ret.put("success", true);
+//            ret.put("result",data);
+//        }
+//        return ret;
+//    }
+
 //    /**
 //     * 个人中心-授权
 //     */
@@ -108,15 +185,18 @@ public class UserCenterController {
      * @throws CommodityNotFoundException
      */
     @RequestMapping(value = "/userBoughts", method = RequestMethod.POST)
-    private Map<String, Object> userBoughts(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userBoughts(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
         }
+        User user = userCenterService.getUserByUserId(userId);
+        if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
+            throw new UserNotFoundException("用户不存在");
+        }
         List<Buy> buyList= new ArrayList<Buy>();
         buyList = userCenterService.getBuyByUserId(userId);//获取这个用户的buy列表
         List<Commodities> commoditiesList= new ArrayList<Commodities>();//存储商品信息的List
-        List<HashMap<String, Object>> pictureMapList = new ArrayList<HashMap<String, Object>>();//存储商品对应的图片url(s)的List
         List<HashMap<String, Object>> orderMapList = new ArrayList<HashMap<String, Object>>();//存储商品交易订单id和交易时间的List
         for(Buy buy: buyList) {//对于这个List<buy>里面的每个buy
             //以下为商品部分
@@ -126,7 +206,6 @@ public class UserCenterController {
                 throw new CommodityNotFoundException("商品不存在");
             }
             List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();//存储商品图片的List
-            HashMap<String, Object> pictureMap = new HashMap<String, Object>();//将同一个商品的id和商品图片的List封装起来
             //以下为图片url(s)部分
             //处理图片url，以","作为分隔符
             String pictureUrl = commodity.getPictureUrl();
@@ -134,27 +213,11 @@ public class UserCenterController {
                 String[] pictureUrls = pictureUrl.split(",");
                 Commodities commodities = new Commodities(commodity, pictureUrls);
                 commoditiesList.add(commodities);
-                //用另外一个Map存储图片的url
-                for (int i = 0; i < pictureUrls.length; i++) {
-                    HashMap<String, Object> urlsMap = new HashMap<String, Object>();
-                    urlsMap.put("urlId", i);
-                    urlsMap.put("urlSrc", pictureUrls[i]);
-                    urlsMapList.add(urlsMap);
-                }
             } else {//没有","，即只有一个url
                 String[] pictureUrls = new String[]{pictureUrl};
                 Commodities commodities = new Commodities(commodity, pictureUrls);
                 commoditiesList.add(commodities);
-                //用另外一个存储图片的url，这里加一个url即可
-                HashMap<String, Object> urlsMap = new HashMap<String, Object>();
-                urlsMap.put("urlId", 0);
-                urlsMap.put("urlSrc", pictureUrls[0]);
-                urlsMapList.add(urlsMap);
             }
-            //封装每个商品的id以及对应的url(s)
-            pictureMap.put("cmId", buy.getCmId());
-            pictureMap.put("picUrls", urlsMapList);
-            pictureMapList.add(pictureMap);
 
             //以下为订单id和交易时间部分
             Integer orderId = buy.getOrderId();
@@ -168,22 +231,24 @@ public class UserCenterController {
         //封装信息
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("commodityList", commoditiesList);
-        map.put("pictureList", pictureMapList);
         map.put("orderList", orderMapList);
         map.put("errorCode", 0);
         return map;
     }
 
     @RequestMapping(value = "/userFavors", method = RequestMethod.POST)
-    private Map<String, Object> userFavors(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userFavors(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
         }
+        User user = userCenterService.getUserByUserId(userId);
+        if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
+            throw new UserNotFoundException("用户不存在");
+        }
         List<Collect> collectList = new ArrayList<Collect>();
         collectList = userCenterService.getCollectByUserId(userId);//获取这个用户的收藏列表
         List<Commodities> commoditiesList= new ArrayList<Commodities>();//存储商品信息的List
-        List<HashMap<String, Object>> pictureMapList = new ArrayList<HashMap<String, Object>>();//存储商品对应的图片url(s)的List
         for (Collect collect: collectList) {//对于这个List<Collect>的每个collect
             //以下为商品部分
             Integer cmId = collect.getCmId();//获取这个buy的商品id
@@ -200,46 +265,32 @@ public class UserCenterController {
                 String[] pictureUrls = pictureUrl.split(",");
                 Commodities commodities = new Commodities(commodity, pictureUrls);
                 commoditiesList.add(commodities);
-                //用另外一个Map存储图片的url
-                for (int i = 0; i < pictureUrls.length; i++) {
-                    HashMap<String, Object> urlsMap = new HashMap<String, Object>();
-                    urlsMap.put("urlId", i);
-                    urlsMap.put("urlSrc", pictureUrls[i]);
-                    urlsMapList.add(urlsMap);
-                }
             } else {//没有","，即只有一个url
                 String[] pictureUrls = new String[]{pictureUrl};
                 Commodities commodities = new Commodities(commodity, pictureUrls);
                 commoditiesList.add(commodities);
-                //用另外一个存储图片的url，这里加一个url即可
-                HashMap<String, Object> urlsMap = new HashMap<String, Object>();
-                urlsMap.put("urlId", 0);
-                urlsMap.put("urlSrc", pictureUrls[0]);
-                urlsMapList.add(urlsMap);
             }
-            //封装每个商品的id以及对应的url(s)
-            pictureMap.put("cmId", collect.getCmId());
-            pictureMap.put("picUrls", urlsMapList);
-            pictureMapList.add(pictureMap);
         }
         //封装信息
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("commodityList", commoditiesList);
-        map.put("pictureList", pictureMapList);
         map.put("errorCode", 0);
         return map;
     }
 
     @RequestMapping(value = "/userBookings", method = RequestMethod.POST)
-    private Map<String, Object> userBookings(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userBookings(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
         }
+        User user = userCenterService.getUserByUserId(userId);
+        if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
+            throw new UserNotFoundException("用户不存在");
+        }
         List<Reserve> reserveList = new ArrayList<Reserve>();
         reserveList = userCenterService.getReserveByUserId(userId);//获取这个用户的预定列表
         List<Commodities> commoditiesList= new ArrayList<Commodities>();//存储商品信息的List
-        List<HashMap<String, Object>> pictureMapList = new ArrayList<HashMap<String, Object>>();//存储商品对应的图片url(s)的List
         List<HashMap<String, Object>> reserveMapList = new ArrayList<HashMap<String, Object>>();//存储商品预定订单id和预定时间的List
         for (Reserve reserve: reserveList) {//对于这个List<Reserve>的每个reserve
             //以下为商品部分
@@ -257,27 +308,11 @@ public class UserCenterController {
                 String[] pictureUrls = pictureUrl.split(",");
                 Commodities commodities = new Commodities(commodity, pictureUrls);
                 commoditiesList.add(commodities);
-                //用另外一个Map存储图片的url
-                for (int i = 0; i < pictureUrls.length; i++) {
-                    HashMap<String, Object> urlsMap = new HashMap<String, Object>();
-                    urlsMap.put("urlId", i);
-                    urlsMap.put("urlSrc", pictureUrls[i]);
-                    urlsMapList.add(urlsMap);
-                }
             } else {//没有","，即只有一个url
                 String[] pictureUrls = new String[]{pictureUrl};
                 Commodities commodities = new Commodities(commodity, pictureUrls);
                 commoditiesList.add(commodities);
-                //用另外一个存储图片的url，这里加一个url即可
-                HashMap<String, Object> urlsMap = new HashMap<String, Object>();
-                urlsMap.put("urlId", 0);
-                urlsMap.put("urlSrc", pictureUrls[0]);
-                urlsMapList.add(urlsMap);
             }
-            //封装每个商品的id以及对应的url(s)
-            pictureMap.put("cmId", reserve.getCmId());
-            pictureMap.put("picUrls", urlsMapList);
-            pictureMapList.add(pictureMap);
 
             //以下为预定订单id和预定时间部分
             Integer reserveId = reserve.getReserveId();
@@ -291,7 +326,6 @@ public class UserCenterController {
         //封装信息
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("commodityList", commoditiesList);
-        map.put("pictureList", pictureMapList);
         map.put("reserveList", reserveMapList);
         map.put("errorCode", 0);
         return map;
