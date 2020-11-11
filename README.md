@@ -4,6 +4,6 @@
     Java JDK: 1.8
     Java Version: 8
     数据库: MySQL
-    MySQL Version: 8.0.20
+    MySQL Version: 8.0.22
     Spring-Boot: 2.3.4 Release
     Mybatis： 2.1.3
