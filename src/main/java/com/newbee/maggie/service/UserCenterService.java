@@ -1,7 +1,10 @@
 package com.newbee.maggie.service;
 
+import com.newbee.maggie.entity.Buy;
 import com.newbee.maggie.entity.Commodity;
 import com.newbee.maggie.entity.User;
+
+import java.util.List;
 
 public interface UserCenterService {
 
@@ -13,23 +16,23 @@ public interface UserCenterService {
     public User getUserByNickname(String nickname);
 
     /**
-     * 通过id查找用户
+     * 通过用户id查找用户
      * @param userId
      * @return User
      */
     public User getUserByUserId(Integer userId);
 
-//    /**
-//     * 进行授权登录操作
-//     * @param userInfo
-//     * @return User
-//     */
-//    public User getUserInfo(UserInfo userInfo);
-
     /**
-     * 通过id查找商品
+     * 通过商品id查找商品
      * @param cmId
      * @return
      */
     public Commodity getCommodityByCmId(Integer cmId);
+
+    /**
+     * 通过用户id查找已购列表
+     * @param userId
+     * @return
+     */
+    public List<Buy> getBuyByUserId(Integer userId);
 }

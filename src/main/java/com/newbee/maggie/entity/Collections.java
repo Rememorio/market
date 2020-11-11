@@ -29,7 +29,7 @@ public class Collections {
 
     @Override
     public String toString() {
-        return "Collection{" +
+        return "Collections{" +
                 "userId=" + userId +
                 ", cmId=" + cmId +
                 '}';

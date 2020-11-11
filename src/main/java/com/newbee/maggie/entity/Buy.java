@@ -1,7 +1,5 @@
 package com.newbee.maggie.entity;
 
-import java.util.Date;
-
 public class Buy {
     //商品id
     private Integer cmId;
@@ -10,9 +8,9 @@ public class Buy {
     //订单id
     private Integer orderId;
     //交易时间
-    private Date timeOfTransaction;
+    private String timeOfTransaction;
 
-    public Buy(Integer cmId, Integer userId, Integer orderId, Date timeOfTransaction) {
+    public Buy(Integer cmId, Integer userId, Integer orderId, String timeOfTransaction) {
         this.cmId = cmId;
         this.userId = userId;
         this.orderId = orderId;
@@ -43,11 +41,11 @@ public class Buy {
         this.orderId = orderId;
     }
 
-    public Date getTimeOfTransaction() {
+    public String getTimeOfTransaction() {
         return timeOfTransaction;
     }
 
-    public void setTimeOfTransaction(Date timeOfTransaction) {
+    public void setTimeOfTransaction(String timeOfTransaction) {
         this.timeOfTransaction = timeOfTransaction;
     }
 

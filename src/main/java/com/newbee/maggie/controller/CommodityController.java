@@ -45,7 +45,7 @@ public class CommodityController {
             Commodities commodities = new Commodities(commodity, pictureUrls);
             map.put("data", commodities);
             List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();
-            for (int i = 0; i < pictureUrls.length; i++) {
+            for (int i = 0; i < pictureUrls.length; i++) {//逐一添加url
                 HashMap<String, Object> urlsMap = new HashMap<String, Object>();
                 urlsMap.put("urlId", i);
                 urlsMap.put("urlSrc", pictureUrls[i]);
@@ -53,7 +53,15 @@ public class CommodityController {
             }
             map.put("urlList", urlsMapList);
         } else {//没有","，即只有一个url
-            map.put("data", commodity);
+            String[] pictureUrls = new String[]{pictureUrl};
+            Commodities commodities = new Commodities(commodity, pictureUrls);
+            map.put("data", commodities);
+            List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();
+            HashMap<String, Object> urlsMap = new HashMap<String, Object>();
+            urlsMap.put("urlId", 0);//这里添加一个url就可以了
+            urlsMap.put("urlSrc", pictureUrls[0]);
+            urlsMapList.add(urlsMap);
+            map.put("urlList", urlsMapList);
         }
         return map;
     }
