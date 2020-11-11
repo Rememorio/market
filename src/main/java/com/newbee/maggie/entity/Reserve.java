@@ -1,7 +1,5 @@
 package com.newbee.maggie.entity;
 
-import java.util.Date;
-
 public class Reserve {
     //商品id
     private Integer cmId;
@@ -10,9 +8,9 @@ public class Reserve {
     //预定的id
     private Integer reserveId;
     //预定的时间
-    private Date reserveTime;
+    private String reserveTime;
 
-    public Reserve(Integer cmId, Integer userId, Integer reserveId, Date reserveTime) {
+    public Reserve(Integer cmId, Integer userId, Integer reserveId, String reserveTime) {
         this.cmId = cmId;
         this.userId = userId;
         this.reserveId = reserveId;
@@ -43,11 +41,11 @@ public class Reserve {
         this.reserveId = reserveId;
     }
 
-    public Date getReserveTime() {
+    public String getReserveTime() {
         return reserveTime;
     }
 
-    public void setReserveTime(Date reserveTime) {
+    public void setReserveTime(String reserveTime) {
         this.reserveTime = reserveTime;
     }
 

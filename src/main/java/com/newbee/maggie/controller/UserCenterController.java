@@ -1,14 +1,10 @@
 package com.newbee.maggie.controller;
 
-import com.newbee.maggie.entity.Buy;
-import com.newbee.maggie.entity.Commodities;
-import com.newbee.maggie.entity.Commodity;
-import com.newbee.maggie.entity.User;
+import com.newbee.maggie.entity.*;
 import com.newbee.maggie.service.UserCenterService;
 import com.newbee.maggie.util.CommodityNotFoundException;
 import com.newbee.maggie.util.ParamNotFoundException;
 import com.newbee.maggie.util.UserNotFoundException;
-import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -174,6 +170,129 @@ public class UserCenterController {
         map.put("commodityList", commoditiesList);
         map.put("pictureList", pictureMapList);
         map.put("orderList", orderMapList);
+        map.put("errorCode", 0);
+        return map;
+    }
+
+    @RequestMapping(value = "/userFavors", method = RequestMethod.POST)
+    private Map<String, Object> userFavors(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, CommodityNotFoundException {
+        Integer userId = userIdMap.get("userId");//获取用户id
+        if (userId == null) {//如果没有userId信息
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        List<Collect> collectList = new ArrayList<Collect>();
+        collectList = userCenterService.getCollectByUserId(userId);//获取这个用户的收藏列表
+        List<Commodities> commoditiesList= new ArrayList<Commodities>();//存储商品信息的List
+        List<HashMap<String, Object>> pictureMapList = new ArrayList<HashMap<String, Object>>();//存储商品对应的图片url(s)的List
+        for (Collect collect: collectList) {//对于这个List<Collect>的每个collect
+            //以下为商品部分
+            Integer cmId = collect.getCmId();//获取这个buy的商品id
+            Commodity commodity = userCenterService.getCommodityByCmId(cmId);//根据商品id获取这个商品的详情
+            if (commodity == null) {//应该不会没有的叭，不过写上好过没写
+                throw new CommodityNotFoundException("商品不存在");
+            }
+            List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();//存储商品图片的List
+            HashMap<String, Object> pictureMap = new HashMap<String, Object>();//将同一个商品的id和商品图片的List封装起来
+            //以下为图片url(s)部分
+            //处理图片url，以","作为分隔符
+            String pictureUrl = commodity.getPictureUrl();
+            if (pictureUrl.contains(",")) {//如果有","，即不止一个url
+                String[] pictureUrls = pictureUrl.split(",");
+                Commodities commodities = new Commodities(commodity, pictureUrls);
+                commoditiesList.add(commodities);
+                //用另外一个Map存储图片的url
+                for (int i = 0; i < pictureUrls.length; i++) {
+                    HashMap<String, Object> urlsMap = new HashMap<String, Object>();
+                    urlsMap.put("urlId", i);
+                    urlsMap.put("urlSrc", pictureUrls[i]);
+                    urlsMapList.add(urlsMap);
+                }
+            } else {//没有","，即只有一个url
+                String[] pictureUrls = new String[]{pictureUrl};
+                Commodities commodities = new Commodities(commodity, pictureUrls);
+                commoditiesList.add(commodities);
+                //用另外一个存储图片的url，这里加一个url即可
+                HashMap<String, Object> urlsMap = new HashMap<String, Object>();
+                urlsMap.put("urlId", 0);
+                urlsMap.put("urlSrc", pictureUrls[0]);
+                urlsMapList.add(urlsMap);
+            }
+            //封装每个商品的id以及对应的url(s)
+            pictureMap.put("cmId", collect.getCmId());
+            pictureMap.put("picUrls", urlsMapList);
+            pictureMapList.add(pictureMap);
+        }
+        //封装信息
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("commodityList", commoditiesList);
+        map.put("pictureList", pictureMapList);
+        map.put("errorCode", 0);
+        return map;
+    }
+
+    @RequestMapping(value = "/userBookings", method = RequestMethod.POST)
+    private Map<String, Object> userBookings(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, CommodityNotFoundException {
+        Integer userId = userIdMap.get("userId");//获取用户id
+        if (userId == null) {//如果没有userId信息
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        List<Reserve> reserveList = new ArrayList<Reserve>();
+        reserveList = userCenterService.getReserveByUserId(userId);//获取这个用户的预定列表
+        List<Commodities> commoditiesList= new ArrayList<Commodities>();//存储商品信息的List
+        List<HashMap<String, Object>> pictureMapList = new ArrayList<HashMap<String, Object>>();//存储商品对应的图片url(s)的List
+        List<HashMap<String, Object>> reserveMapList = new ArrayList<HashMap<String, Object>>();//存储商品预定订单id和预定时间的List
+        for (Reserve reserve: reserveList) {//对于这个List<Reserve>的每个reserve
+            //以下为商品部分
+            Integer cmId = reserve.getCmId();//获取这个buy的商品id
+            Commodity commodity = userCenterService.getCommodityByCmId(cmId);//根据商品id获取这个商品的详情
+            if (commodity == null) {//应该不会没有的叭，不过写上好过没写
+                throw new CommodityNotFoundException("商品不存在");
+            }
+            List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();//存储商品图片的List
+            HashMap<String, Object> pictureMap = new HashMap<String, Object>();//将同一个商品的id和商品图片的List封装起来
+            //以下为图片url(s)部分
+            //处理图片url，以","作为分隔符
+            String pictureUrl = commodity.getPictureUrl();
+            if (pictureUrl.contains(",")) {//如果有","，即不止一个url
+                String[] pictureUrls = pictureUrl.split(",");
+                Commodities commodities = new Commodities(commodity, pictureUrls);
+                commoditiesList.add(commodities);
+                //用另外一个Map存储图片的url
+                for (int i = 0; i < pictureUrls.length; i++) {
+                    HashMap<String, Object> urlsMap = new HashMap<String, Object>();
+                    urlsMap.put("urlId", i);
+                    urlsMap.put("urlSrc", pictureUrls[i]);
+                    urlsMapList.add(urlsMap);
+                }
+            } else {//没有","，即只有一个url
+                String[] pictureUrls = new String[]{pictureUrl};
+                Commodities commodities = new Commodities(commodity, pictureUrls);
+                commoditiesList.add(commodities);
+                //用另外一个存储图片的url，这里加一个url即可
+                HashMap<String, Object> urlsMap = new HashMap<String, Object>();
+                urlsMap.put("urlId", 0);
+                urlsMap.put("urlSrc", pictureUrls[0]);
+                urlsMapList.add(urlsMap);
+            }
+            //封装每个商品的id以及对应的url(s)
+            pictureMap.put("cmId", reserve.getCmId());
+            pictureMap.put("picUrls", urlsMapList);
+            pictureMapList.add(pictureMap);
+
+            //以下为预定订单id和预定时间部分
+            Integer reserveId = reserve.getReserveId();
+            String reserveTime = reserve.getReserveTime();
+            HashMap<String, Object> reserveMap = new HashMap<String, Object>();
+            reserveMap.put("cmId", reserve.getCmId());
+            reserveMap.put("reserveId", reserve.getReserveId());
+            reserveMap.put("reserveTime", reserve.getReserveTime());
+            reserveMapList.add(reserveMap);
+        }
+        //封装信息
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("commodityList", commoditiesList);
+        map.put("pictureList", pictureMapList);
+        map.put("reserveList", reserveMapList);
         map.put("errorCode", 0);
         return map;
     }

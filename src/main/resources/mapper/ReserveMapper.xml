@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newbee.maggie.mapper.ReserveMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
+    <select id="findReserveByUserId" resultType="com.newbee.maggie.entity.Reserve"><!--编写sql语句-->
+		SELECT cm_id, user_id, reserve_id, reserve_time
+		FROM reserve
+		WHERE user_id = #{userId}
+	</select>
+
+</mapper>

@@ -1,12 +1,13 @@
 package com.newbee.maggie.entity;
 
-public class Collections {
+//由于不知道为什么Collection类与java.lang.Collection有冲突，故改名为Collect
+public class Collect {
     //用户id
     private Integer userId;
     //商品id
     private  Integer cmId;
 
-    public Collections(Integer userId, Integer cmId) {
+    public Collect(Integer userId, Integer cmId) {
         this.userId = userId;
         this.cmId = cmId;
     }
@@ -29,7 +30,7 @@ public class Collections {
 
     @Override
     public String toString() {
-        return "Collections{" +
+        return "Collect{" +
                 "userId=" + userId +
                 ", cmId=" + cmId +
                 '}';

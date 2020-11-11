@@ -1,8 +1,6 @@
 package com.newbee.maggie.service;
 
-import com.newbee.maggie.entity.Buy;
-import com.newbee.maggie.entity.Commodity;
-import com.newbee.maggie.entity.User;
+import com.newbee.maggie.entity.*;
 
 import java.util.List;
 
@@ -35,4 +33,18 @@ public interface UserCenterService {
      * @return
      */
     public List<Buy> getBuyByUserId(Integer userId);
+
+    /**
+     * 通过用户id查找收藏的商品
+     * @param userId
+     * @return
+     */
+    public List<Collect> getCollectByUserId(Integer userId);
+
+    /**
+     * 通过用户id查找预定的商品
+     * @param userId
+     * @return
+     */
+    public List<Reserve> getReserveByUserId(Integer userId);
 }
