@@ -3,10 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newbee.maggie.mapper.CommodityMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
-    <select id="findCommodityByCmId" resultType="com.newbee.maggie.entity.Commodity"><!--编写sql语句-->
+    <select id="getCommodityByCmId" resultType="com.newbee.maggie.entity.Commodity"><!--编写sql语句-->
 		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
 		FROM commodity
 		WHERE cm_id = #{cmId}
+	</select>
+	<select id="getCmListByUserId" resultType="com.newbee.maggie.entity.Commodity">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		WHERE user_id = #{userId}
 	</select>
 
 </mapper>

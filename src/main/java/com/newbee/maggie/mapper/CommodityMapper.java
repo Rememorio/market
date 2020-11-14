@@ -2,6 +2,8 @@ package com.newbee.maggie.mapper;
 
 import com.newbee.maggie.entity.Commodity;
 
+import java.util.List;
+
 public interface CommodityMapper {
 
     /**
@@ -9,5 +11,12 @@ public interface CommodityMapper {
      * @param cmId
      * @return
      */
-    Commodity findCommodityByCmId(Integer cmId);
+    Commodity getCommodityByCmId(Integer cmId);
+
+    /**
+     * 根据用户id查找该用户出售的所有商品
+     * @param userId
+     * @return
+     */
+    List<Commodity> getCmListByUserId(Integer userId);
 }

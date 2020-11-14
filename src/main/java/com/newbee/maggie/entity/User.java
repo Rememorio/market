@@ -2,16 +2,15 @@ package com.newbee.maggie.entity;
 
 public class User {
 
-    public User(Integer userId, String sessionKey, String openId, String contactInformation,
-                String nickname, String defaultShippingAddress, Integer grade, int authority){
+    public User(Integer userId, String sessionKey, String contactInformation, String nickname, String defaultShippingAddress, Integer grade, int authority, String openId) {
         this.userId = userId;
         this.sessionKey = sessionKey;
-        this.openId = openId;
         this.contactInformation = contactInformation;
         this.nickname = nickname;
         this.defaultShippingAddress = defaultShippingAddress;
         this.grade = grade;
         this.authority = authority;
+        this.openId = openId;
     }
 
     public User(String nickname){
@@ -28,8 +27,6 @@ public class User {
     private Integer userId;
     //微信生成的session_key
     private String sessionKey;
-    //微信生成的openid
-    private String openId;
     //联系信息：手机号
     private String contactInformation;
     //昵称
@@ -40,6 +37,8 @@ public class User {
     private Integer grade;
     //权限
     private int authority;
+    //微信生成的openid
+    private String openId;
 
     //set用户id
     public void setUserId(Integer userId){
@@ -102,6 +101,7 @@ public class User {
     public void setAuthority(int authority) {
         this.authority = authority;
     }    //get权限
+    //get权限
     public int getAuthority() {
         return authority;
     }
@@ -114,9 +114,10 @@ public class User {
                 ", sessionKey='" + sessionKey + '\'' +
                 ", contactInformation='" + contactInformation + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", defaultShippingAddress=" + defaultShippingAddress +
+                ", defaultShippingAddress='" + defaultShippingAddress + '\'' +
                 ", grade=" + grade +
                 ", authority=" + authority +
+                ", openId='" + openId + '\'' +
                 '}';
     }
 }

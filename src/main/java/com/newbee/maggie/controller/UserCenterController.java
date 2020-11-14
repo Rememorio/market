@@ -3,7 +3,6 @@ package com.newbee.maggie.controller;
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.service.UserCenterService;
 import com.newbee.maggie.util.*;
-import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -172,10 +171,8 @@ public class UserCenterController {
             throw new UserNotFoundException("用户不存在");
         }
         int authority = user.getAuthority();
-        Map<String, Integer> auth = new HashMap<String, Integer>();//封装用户权限信息
-        auth.put("authority", authority);
         map.put("errorCode", 0);
-        map.put("data", auth);
+        map.put("authority", authority);
         return map;
     }
 

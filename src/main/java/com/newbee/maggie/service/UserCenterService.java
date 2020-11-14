@@ -21,7 +21,7 @@ public interface UserCenterService {
     public User getUserByUserId(Integer userId);
 
     /**
-     * 获取用户数，以便于生成用户id
+     * 获取用户数
      * @return
      */
     public Integer getUserCount();
@@ -32,6 +32,20 @@ public interface UserCenterService {
      * @return
      */
     public Integer addUser(User user);
+
+    /**
+     * 更新用户信息
+     * @param user
+     * @return
+     */
+    public boolean updateUser(User user);
+
+    /**
+     * 删除用户
+     * @param userId
+     * @return
+     */
+    public boolean deleteUserByUserId(Integer userId);
 
     /**
      * 通过商品id查找商品

@@ -3,14 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newbee.maggie.mapper.UserMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
-    <select id="findUserByUsername" resultType="com.newbee.maggie.entity.User"><!--编写sql语句-->
-		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, department, grade, authority, open_id
+    <select id="getUserByUserName" resultType="com.newbee.maggie.entity.User"><!--编写sql语句-->
+		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, grade, authority, open_id
 		FROM user
 		WHERE nickname = #{nickname}
 	</select>
 
-	<select id="findUserByUserId" resultType="com.newbee.maggie.entity.User">
-		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, department, grade, authority, open_id
+	<select id="getUserByUserId" resultType="com.newbee.maggie.entity.User">
+		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, grade, authority, open_id
 		FROM user
 		WHERE user_id = #{userId}
 	</select>
@@ -20,7 +20,7 @@
 		FROM user
 	</select>
 
-	<select id="findUserIdByOpenId" resultType="java.lang.Integer">
+	<select id="getUserIdByOpenId" resultType="java.lang.Integer">
 		SELECT user_id
 		FROM user
 		WHERE open_id = #{openId}
@@ -29,16 +29,16 @@
 	<insert id="insertUser" parameterType="com.newbee.maggie.entity.User"
 			keyProperty="user_id" keyColumn="user_id" useGeneratedKeys="true">
 		INSERT INTO
-		user(user_id, session_key, contact_information, nickname, default_shipping_address, department, grade, authority, open_id)
-		VALUES(#{userId}, #{sessionKey}, #{contactInformation}, #{nickname}, #{defaultShippingAddress}, #{department}, #{grade}, #{authority}, #{openId})
+		user(user_id, session_key, contact_information, nickname, default_shipping_address, grade, authority, open_id)
+		VALUES(#{userId}, #{sessionKey}, #{contactInformation}, #{nickname}, #{defaultShippingAddress}, #{grade}, #{authority}, #{openId})
 	</insert>
 
 	<update id="updateUser" parameterType="com.newbee.maggie.entity.User">
 		UPDATE user
 		<set>
 			<if test="grade != null">grade = #{grade},</if>
-			<if test="contactInformation != null">contact_information = #{priority},</if>
-			<if test="default_shipping_address != null">default_shipping_address = #{default_shipping_address}</if>
+			<if test="contactInformation != null">contact_information = #{contactInformation},</if>
+			<if test="defaultShippingAddress != null">default_shipping_address = #{defaultShippingAddress}</if>
 		</set>
 		where area_id=#{areaId}
 	</update>

@@ -28,12 +28,12 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Override
     public User getUserByNickname(String nickname) {
-        return userMapper.findUserByUsername(nickname);
+        return userMapper.getUserByUserName(nickname);
     }
 
     @Override
     public User getUserByUserId(Integer userId) {
-        return userMapper.findUserByUserId(userId);
+        return userMapper.getUserByUserId(userId);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public Integer addUser(User user) {
         // 判定数据库里面有没有这个人
-        Integer userIdTemp = userMapper.findUserIdByOpenId(user.getOpenId());
+        Integer userIdTemp = userMapper.getUserIdByOpenId(user.getOpenId());
         if (userIdTemp != null)
             throw new RuntimeException("数据库中已经有该用户，添加新用户失败");
         // 空值判断，主要是判断userName不为空
@@ -72,9 +72,51 @@ public class UserCenterServiceImpl implements UserCenterService {
         }
     }
 
+    @Transactional
+    @Override
+    public boolean updateUser(User user) {
+        // 空值判断，主要是判断userName不为空
+        if (user.getNickname() != null && user.getNickname().trim().length() != 0 && !user.getNickname().equals("")) {
+            try {
+                // 更新用户信息
+                int effectedNum = userMapper.updateUser(user);
+                if (effectedNum > 0) {
+                    return true;
+                } else {
+                    throw new RuntimeException("更新用户信息失败");
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("更新用户信息失败:" + e.toString());
+            }
+        } else {
+            throw new RuntimeException("用户信息不能为空");
+        }
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteUserByUserId(Integer userId) {
+        // 判断用户id是否为空
+        if (userId.intValue() > 0) {
+            try {
+                // 删除用户信息
+                int effectedNum = userMapper.deleteUserByUserId(userId);
+                if (effectedNum > 0) {
+                    return true;
+                } else {
+                    throw new RuntimeException("删除用户信息失败");
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("删除用户信息失败:" + e.toString());
+            }
+        } else {
+            throw new RuntimeException("userId不能为空");
+        }
+    }
+
     @Override
     public Commodity getCommodityByCmId(Integer cmId) {
-        return commodityMapper.findCommodityByCmId(cmId);
+        return commodityMapper.getCommodityByCmId(cmId);
     }
 
     @Override

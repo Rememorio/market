@@ -13,6 +13,6 @@ public class CommodityServiceImpl implements CommodityService {
 
     @Override
     public Commodity getCommodityByCmId(Integer cmId) {
-        return commodityMapper.findCommodityByCmId(cmId);
+        return commodityMapper.getCommodityByCmId(cmId);
     }
 }
