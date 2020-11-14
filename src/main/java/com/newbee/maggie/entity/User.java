@@ -1,35 +1,41 @@
 package com.newbee.maggie.entity;
 
 public class User {
-    public User(Integer userId, String sessionKey, String contactInformation,
-                String nickname, Integer defaultShippingAddress, String department, Integer grade, int authority){
+
+    public User(Integer userId, String sessionKey, String openId, String contactInformation,
+                String nickname, String defaultShippingAddress, Integer grade, int authority){
         this.userId = userId;
         this.sessionKey = sessionKey;
+        this.openId = openId;
         this.contactInformation = contactInformation;
         this.nickname = nickname;
         this.defaultShippingAddress = defaultShippingAddress;
-        this.department = department;
         this.grade = grade;
         this.authority = authority;
     }
+
     public User(String nickname){
         this.nickname = nickname;
     }
+
+    public User(String nickname, String sessionKey, String openId) {
+        this.nickname = nickname;
+        this.sessionKey = sessionKey;
+        this.openId = openId;
+    }
+
     //用户id
     private Integer userId;
     //微信生成的session_key
     private String sessionKey;
+    //微信生成的openid
+    private String openId;
     //联系信息：手机号
     private String contactInformation;
     //昵称
     private String nickname;
     //默认地址
-    /**
-     * 0-置空[不筛选地址]，1-大学城，2-五山，3-国际，4-其他
-     */
-    private Integer defaultShippingAddress;
-    //学院
-    private String department;
+    private String defaultShippingAddress;
     //年级
     private Integer grade;
     //权限
@@ -51,6 +57,15 @@ public class User {
     public String getSessionKey(){
         return this.sessionKey;
     }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
     //set手机号
     public void setContactInformation(String contactInformation){
         this.contactInformation = contactInformation;
@@ -68,20 +83,12 @@ public class User {
         return this.nickname;
     }
     //set默认地址
-    public void setDefaultShippingAddress(Integer defaultShippingAddress){
+    public void setDefaultShippingAddress(String defaultShippingAddress){
         this.defaultShippingAddress = defaultShippingAddress;
     }
     //get默认地址
-    public Integer getDefaultShippingAddress(){
+    public String getDefaultShippingAddress(){
         return this.defaultShippingAddress;
-    }
-    //set学院
-    public void setDepartment(String department){
-        this.department = department;
-    }
-    //get学院
-    public String getDepartment(){
-        return this.department;
     }
     //set年级
     public void setGrade(Integer grade){
@@ -108,7 +115,6 @@ public class User {
                 ", contactInformation='" + contactInformation + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", defaultShippingAddress=" + defaultShippingAddress +
-                ", department='" + department + '\'' +
                 ", grade=" + grade +
                 ", authority=" + authority +
                 '}';

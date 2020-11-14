@@ -21,6 +21,19 @@ public interface UserCenterService {
     public User getUserByUserId(Integer userId);
 
     /**
+     * 获取用户数，以便于生成用户id
+     * @return
+     */
+    public Integer getUserCount();
+
+    /**
+     * 插入新用户
+     * @param user
+     * @return
+     */
+    public Integer addUser(User user);
+
+    /**
      * 通过商品id查找商品
      * @param cmId
      * @return

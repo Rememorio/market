@@ -2,10 +2,8 @@ package com.newbee.maggie.controller;
 
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.service.UserCenterService;
-import com.newbee.maggie.util.CommodityNotFoundException;
-import com.newbee.maggie.util.GetOpenIDUtil;
-import com.newbee.maggie.util.ParamNotFoundException;
-import com.newbee.maggie.util.UserNotFoundException;
+import com.newbee.maggie.util.*;
+import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +28,7 @@ public class UserCenterController {
     @RequestMapping(value = "/userInfoByNickname", method = RequestMethod.POST)
     private Map<String, Object> userInfoByUserName(@RequestBody Map<String, String> usernameMap) throws ParamNotFoundException, UserNotFoundException {
         String username = usernameMap.get("nickname");//获取昵称
-        if (username == null) {//如果没有这个昵称
+        if (username == null || username.length() == 0) {//如果没有这个昵称
             throw new ParamNotFoundException("nickname参数为空");
         }
         Map<String, Object> map = new HashMap<String, Object>();
@@ -39,7 +37,7 @@ public class UserCenterController {
             throw new UserNotFoundException("用户不存在");
         }
         map.put("errorCode", 0);
-        map.put("data", user);
+        map.put("userInfo", user);
         return map;
     }
 
@@ -62,17 +60,97 @@ public class UserCenterController {
             throw new UserNotFoundException("用户不存在");
         }
         map.put("errorCode", 0);
-        map.put("data", user);
+        map.put("userInfo", user);
         return map;
     }
 
-    @RequestMapping("/get/openid")
-    public @ResponseBody
-    Map<String, Object> GetOpenid(String appid, String code, String secret) throws ParamNotFoundException{
+//    @RequestMapping("/get/openid")
+//    public @ResponseBody
+//    Map<String, Object> GetOpenid(String appid, String code, String secret) throws ParamNotFoundException{
+//        if (code == null || code.length() == 0) {
+//            throw new ParamNotFoundException("code不能为空");
+//        }
+//        return GetOpenIDUtil.oauth2GetOpenid(appid, code, secret);
+//    }
+
+    /**
+     * 根据code, appid, secret返回session_key等
+     * @param codeMap
+     * @return
+     * @throws ParamNotFoundException
+     * @throws RequestFailedException
+     */
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
+    private Map<String, Object> getUserInfo(@RequestBody Map<String, String> codeMap) throws ParamNotFoundException, RequestFailedException {
+        String code = codeMap.get("code");
+        String appid = codeMap.get("appid");
+        String secret = codeMap.get("secret");
+        //不用grant_type了
         if (code == null || code.length() == 0) {
             throw new ParamNotFoundException("code不能为空");
         }
-        return GetOpenIDUtil.oauth2GetOpenid(appid, code, secret);
+        if (appid == null || appid.length() == 0) {
+            throw new ParamNotFoundException("appid不能为空");
+        }
+        if (secret == null || secret.length() == 0) {
+            throw new ParamNotFoundException("secret不能为空");
+        }
+        // 根据appid, secret, code获取openid参考这里
+        // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
+        Map<String, Object> openIdMap = GetOpenIDUtil.oauth2GetOpenid(appid, code, secret);
+        String errCode = (String) openIdMap.get("errcode");
+        String errMsg = (String) openIdMap.get("errmsg");
+        if (errCode != "0") {//如果请求不成功
+            throw new RequestFailedException(errMsg);
+        }
+        String openId = (String) openIdMap.get("openid");
+        String sessionKey = (String) openIdMap.get("session_key");
+        String unionId = (String) openIdMap.get("unionid");
+
+        // 根据appid, secret获取access_token参考这里
+        // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+        Map<String, String> accessTokenMap = GetAccessTokenUtil.getAccessToken(appid, secret);//这里的函数是默认成功，因为成功失败返回不太一样
+        String accessToken = accessTokenMap.get("access_token");
+        if (accessToken == null || accessToken.length() == 0) {
+            throw new RequestFailedException("accessToken获取失败");
+        }
+        //封装信息
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("openId", openId);
+        map.put("sessionKey", sessionKey);
+        map.put("unionId", unionId);
+        map.put("accessToken", accessToken);
+        map.put("errorCode", 0);
+        return map;
+    }
+
+    /**
+     * 根据openid, session_key和用户名插入新用户，并返回用户id
+     * @param userNameMap
+     * @return
+     * @throws ParamNotFoundException
+     */
+    @RequestMapping(value = "/getUserId", method = RequestMethod.POST)
+    private Map<String, Object> setUserInfo(@RequestBody Map<String, String> userNameMap) throws ParamNotFoundException {
+        String openId = userNameMap.get("openId");
+        String sessionKey = userNameMap.get("sessionKey");
+        String nickname = userNameMap.get("userName");
+        if (openId == null || openId.length() == 0) {
+            throw new ParamNotFoundException("openId不能为空");
+        }
+        if (sessionKey == null || sessionKey.length() == 0) {
+            throw new ParamNotFoundException("sessionKet不能为空");
+        }
+        if (nickname == null || nickname.length() == 0) {
+            throw new ParamNotFoundException("userName不能为空");
+        }
+        User user = new User(nickname, sessionKey, openId);
+        Integer userId = userCenterService.addUser(user);//add函数成功则返回用户id
+        //封装信息
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("errorCode", 0);
+        map.put("userId", userId);
+        return map;
     }
 
     /**

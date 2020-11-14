@@ -13,8 +13,8 @@ import java.util.Map;
 public class GetAccessTokenUtil {
     // 网页授权接口
     public final static String GetPageAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
-    public static Map<String, String> getAccessToken(String appid, String appsecret) {
-        String requestUrl = GetPageAccessTokenUrl.replace("APPID", appid).replace("APPSECRET", appsecret);
+    public static Map<String, String> getAccessToken(String appid, String secret) {
+        String requestUrl = GetPageAccessTokenUrl.replace("APPID", appid).replace("APPSECRET", secret);
         HttpClient client = null;
         Map<String, String> result = new HashMap<String, String>();
         String accessToken = null;

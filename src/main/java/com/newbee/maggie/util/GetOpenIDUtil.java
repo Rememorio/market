@@ -14,7 +14,7 @@ import java.util.Map;
 public class GetOpenIDUtil {
     // 网页授权接口
     public final static String GetPageAccessTokenUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=CODE&grant_type=authorization_code";
-    public  static Map<String,Object> oauth2GetOpenid(String appid, String code, String secret) {
+    public static Map<String,Object> oauth2GetOpenid(String appid, String code, String secret) {
         String requestUrl = GetPageAccessTokenUrl.replace("APPID", appid).replace("SECRET", secret).replace("CODE", code);
         DefaultHttpClient client = null;
         Map<String,Object> result =new HashMap<String,Object>();
