@@ -3,6 +3,7 @@ package com.newbee.maggie.controller;
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.service.UserCenterService;
 import com.newbee.maggie.util.CommodityNotFoundException;
+import com.newbee.maggie.util.GetOpenIDUtil;
 import com.newbee.maggie.util.ParamNotFoundException;
 import com.newbee.maggie.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,91 +66,16 @@ public class UserCenterController {
         return map;
     }
 
-//    public String doPost(String url, Map<String,String> map) throws Exception {
-//        String result = null;
-//        HttpClient httpClient = new SSLClient();
-//        HttpPost httpPost = new HttpPost(url);
-//        //设置参数
-//        List<NameValuePair> list = new ArrayList<NameValuePair>();
-//        Iterator iterator = map.entrySet().iterator();
-//        while(iterator.hasNext()){
-//            Entry<String,String> elem = (Entry<String, String>) iterator.next();
-//            list.add(new BasicNameValuePair(elem.getKey(),elem.getValue()));
-//        }
-//        if(list.size() > 0){
-//            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, "UTF-8");
-//            httpPost.setEntity(entity);
-//        }
-//        HttpResponse response = httpClient.execute(httpPost);
-//        if(response != null){
-//            HttpEntity resEntity = response.getEntity();
-//            if(resEntity != null){
-//                result = EntityUtils.toString(resEntity, "UTF-8");
-//            }
-//        }
-//        return result;
-//    }
-//
-//    public String doGet(String url, Map<String,String> map) throws Exception{
-//        String result = null;
-//        HttpClient httpClient = new SSLClient();
-//        String param="";
-//        for(String nameKey:map.keySet()){
-//            param += nameKey+"="+map.get(nameKey)+"&";
-//        }
-//        param = param.substring(0,param.length()-1);
-//        String urlNameString = url + "?" + param;
-//        HttpGet httpGet = new HttpGet(urlNameString);
-//        HttpResponse response = httpClient.execute(httpGet);
-//        if(response != null){
-//            HttpEntity resEntity = response.getEntity();
-//            if(resEntity != null){
-//                result = EntityUtils.toString(resEntity, "UTF-8");
-//            }
-//        }
-//        return result;
-//    }
-
-//    private Map<String, Object> _getOpenId(String code){
-//        Map<String, Object> ret = new HashMap<>();
-//        // 组装参数*****
-//        Map<String, String> urlData= new HashMap<String, String>();
-//        urlData.put("appid",appid);//小程序id
-//        urlData.put("secret",appKey);//小程序key
-//        urlData.put("grant_type","authorization_code");//固定值这样写就行
-//        urlData.put("js_code",code);//小程序传过来的code
-//        HttpsClientUtil httpsClientUtil = new HttpsClientUtil();
-//        Object data_deserialize = null;
-//        try {
-//            //code2OpenidUrl "https://api.weixin.qq.com/sns/jscode2session";
-//            String dataStr = httpsClientUtil.doGet(code2OpenidUrl, urlData);
-//            data_deserialize = JSONUtil.deserialize(dataStr);
-//        }catch(Exception ex){
-//            ret.put("success", false);
-//            ret.put("msg", "_getOpenId_未知异常");
-//            ret.put("message", ex);
-//            return ret;
-//        }
-//        Map<String, String> data=  (Map<String, String>)data_deserialize;
-//        if( data.containsKey("errcode") ){
-//            ret.put("success", false);
-//            ret.put("msg", data.containsKey("errcode"));
-//            ret.put("message", data.containsKey("errmsg"));
-//        }else{
-//            ret.put("success", true);
-//            ret.put("result",data);
-//        }
-//        return ret;
-//    }
-
-//    /**
-//     * 个人中心-授权
-//     */
-//    @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
-//    private Map<String, Object> getUserInfo() {
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        return map;
-//    }
+    //private String secret = "82e99a80db3f4558f68881626417ad75";
+    //private String appid = "wxc4eb5a19612df490";
+    @RequestMapping("/get/openid")
+    public @ResponseBody
+    Map<String, Object> GetOpenid(String appid, String code, String secret) throws ParamNotFoundException{
+        if (code == null || code.length() == 0) {
+            throw new ParamNotFoundException("code不能为空");
+        }
+        return GetOpenIDUtil.oauth2GetOpenid(appid, code, secret);
+    }
 
     /**
      * 根据用户id查询是否具有管理员权限
