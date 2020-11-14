@@ -66,8 +66,6 @@ public class UserCenterController {
         return map;
     }
 
-    //private String secret = "82e99a80db3f4558f68881626417ad75";
-    //private String appid = "wxc4eb5a19612df490";
     @RequestMapping("/get/openid")
     public @ResponseBody
     Map<String, Object> GetOpenid(String appid, String code, String secret) throws ParamNotFoundException{
