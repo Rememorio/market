@@ -5,10 +5,11 @@ import com.newbee.maggie.mapper.CommodityMapper;
 import com.newbee.maggie.mapper.UserMapper;
 import com.newbee.maggie.service.MyStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class MyStoreServiceImpl implements MyStoreService {
     @Autowired
     private CommodityMapper commodityMapper;
