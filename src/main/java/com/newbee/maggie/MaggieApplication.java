@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 public class MaggieApplication {
 
     public static void main(String[] args) {
-        System.out.println("程序启动成功");
         SpringApplication.run(MaggieApplication.class, args);
     }
 

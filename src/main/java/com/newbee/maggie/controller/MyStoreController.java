@@ -1,5 +1,6 @@
 package com.newbee.maggie.controller;
 
+import com.newbee.maggie.entity.Commodities;
 import com.newbee.maggie.entity.Commodity;
 import com.newbee.maggie.service.MyStoreService;
 import com.newbee.maggie.util.ParamNotFoundException;
@@ -32,12 +33,12 @@ public class MyStoreController {
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
         }
-        List<Commodity> cmList = new ArrayList<Commodity>();
-        cmList = myStoreService.getCmListBuyUserId(userId);
+        List<Commodities> cmsList = new ArrayList<Commodities>();
+        cmsList = myStoreService.getCmsListByUserId(userId);
         //封装信息
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("errorCode", 0);
-        map.put("commodityList", cmList);
+        map.put("commodityList", cmsList);
         return map;
     }
 }

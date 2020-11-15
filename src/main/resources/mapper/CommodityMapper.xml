@@ -25,4 +25,11 @@
 		FROM commodity
 	</select>
 
+	<select id="getCmListBySearching" resultType="com.newbee.maggie.entity.Commodity" parameterType="java.lang.String">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		<if test="keyword != null">
+			WHERE name like #{keyword}
+		</if>
+	</select>
 </mapper>

@@ -31,4 +31,10 @@ public interface CommodityMapper {
      * @return
      */
     List<Commodity> getCmList();
+
+    /**
+     * 返回用户搜索的商品
+     * @return
+     */
+    List<Commodity> getCmListBySearching(String keyword);
 }

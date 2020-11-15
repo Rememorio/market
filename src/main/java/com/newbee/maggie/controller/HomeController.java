@@ -1,5 +1,6 @@
 package com.newbee.maggie.controller;
 
+import com.newbee.maggie.entity.Commodities;
 import com.newbee.maggie.entity.Commodity;
 import com.newbee.maggie.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ public class HomeController {
      */
     @RequestMapping(value = "recommend", method = RequestMethod.GET)
     private Map<String, Object> recommendation() {
-        List<Commodity> cmList = new ArrayList<>();
-        cmList = homeService.getRecommendedCommodity();
+        List<Commodities> cmsList = new ArrayList<Commodities>();
+        cmsList = homeService.getRecommendedCommodities();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("errorCode", 0);
-        map.put("commodityList", cmList);
+        map.put("commodityList", cmsList);
         return map;
     }
 }
