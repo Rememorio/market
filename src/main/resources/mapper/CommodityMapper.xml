@@ -15,7 +15,14 @@
 		WHERE user_id = #{userId}
 	</select>
 
+	<select id="getCmCount" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM commodity
+	</select>
 
-
+	<select id="getCmList" resultType="com.newbee.maggie.entity.Commodity">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+	</select>
 
 </mapper>

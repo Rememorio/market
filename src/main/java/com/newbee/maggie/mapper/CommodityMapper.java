@@ -19,4 +19,16 @@ public interface CommodityMapper {
      * @return
      */
     List<Commodity> getCmListByUserId(Integer userId);
+
+    /**
+     * 返回商品数
+     * @return
+     */
+    Integer getCmCount();
+
+    /**
+     * 返回数据库内所有商品
+     * @return
+     */
+    List<Commodity> getCmList();
 }

@@ -4,13 +4,9 @@ import com.newbee.maggie.entity.*;
 import com.newbee.maggie.service.UserCenterService;
 import com.newbee.maggie.util.*;
 import com.newbee.maggie.web.Year;
-import javafx.beans.binding.ObjectExpression;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -267,7 +263,7 @@ public class UserCenterController {
         Integer grade = year.getYear(year.yearChanged(), gradeIndex);
         //更新信息
         user.setContactInformation(contactInfo);
-        user.setDefaultShippingAddress(contactInfo);
+        user.setDefaultShippingAddress(addressInfo);
         user.setGrade(grade);
         //更新数据库
         Map<String, Object> map = new HashMap<String, Object>();
