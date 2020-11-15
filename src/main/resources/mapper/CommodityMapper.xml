@@ -8,10 +8,14 @@
 		FROM commodity
 		WHERE cm_id = #{cmId}
 	</select>
+
 	<select id="getCmListByUserId" resultType="com.newbee.maggie.entity.Commodity">
 		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
 		FROM commodity
 		WHERE user_id = #{userId}
 	</select>
+
+
+
 
 </mapper>

@@ -40,7 +40,7 @@
 			<if test="contactInformation != null">contact_information = #{contactInformation},</if>
 			<if test="defaultShippingAddress != null">default_shipping_address = #{defaultShippingAddress}</if>
 		</set>
-		where area_id=#{areaId}
+		where user_id = #{userId}
 	</update>
 
 	<delete id="deleteUserByUserId" parameterType="java.lang.Integer">

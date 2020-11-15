@@ -3,13 +3,15 @@ package com.newbee.maggie.controller;
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.service.UserCenterService;
 import com.newbee.maggie.util.*;
+import com.newbee.maggie.web.Year;
+import javafx.beans.binding.ObjectExpression;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/userCenter")
@@ -130,7 +132,7 @@ public class UserCenterController {
      * @throws ParamNotFoundException
      */
     @RequestMapping(value = "/getUserId", method = RequestMethod.POST)
-    private Map<String, Object> setUserInfo(@RequestBody Map<String, String> userNameMap) throws ParamNotFoundException {
+    private Map<String, Object> getUserId(@RequestBody Map<String, String> userNameMap) throws ParamNotFoundException {
         String openId = userNameMap.get("openId");
         String sessionKey = userNameMap.get("sessionKey");
         String nickname = userNameMap.get("userName");
@@ -165,14 +167,114 @@ public class UserCenterController {
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        //查找用户
         User user = userCenterService.getUserByUserId(userId);
         if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
             throw new UserNotFoundException("用户不存在");
         }
         int authority = user.getAuthority();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("errorCode", 0);
         map.put("authority", authority);
+        return map;
+    }
+
+    /**
+     * 获取年级数组
+     * @return
+     */
+    @RequestMapping(value = "/userInfo/gradeArray", method = RequestMethod.GET)
+    private Map<String, Object> gradeArray() {
+        Year year = new Year();
+        //封装信息
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (year.yearChanged() == 0) {
+            map.put("errorCode", 0);
+            map.put("gradeArray", Year.year);
+        } else if (year.yearChanged() == 1) {
+            map.put("errorCode", 0);
+            map.put("gradeArray", year.getYears());
+        } else {
+            map.put("errorCode", 1);
+        }
+        return map;
+    }
+
+    /**
+     * 获取可修改的用户信息
+     * @param userIdMap
+     * @return
+     * @throws ParamNotFoundException
+     * @throws UserNotFoundException
+     */
+    @RequestMapping(value = "/userInfo/userInfo", method = RequestMethod.POST)
+    private Map<String, Object> userInfo(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException {
+        Integer userId = userIdMap.get("userId");//获取用户id
+        if (userId == null) {//如果没有userId信息
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        //查找用户
+        User user = userCenterService.getUserByUserId(userId);
+        if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
+            throw new UserNotFoundException("用户不存在");
+        }
+        //计算年级数组下标
+        Year year = new Year();
+        Integer gradeIndex = year.getIndex(year.yearChanged(), user.getGrade());
+        //封装信息
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("userName", user.getNickname());
+        map.put("grade", user.getGrade());
+        map.put("contactInfo", user.getContactInformation());
+        map.put("addressInfo", user.getDefaultShippingAddress());
+        map.put("gradeIndex", gradeIndex);
+        map.put("errorCode", 0);
+        return map;
+    }
+
+    /**
+     * 修改用户联系方式、收货地址和年级
+     * @param userInfoMap
+     * @return
+     * @throws ParamNotFoundException
+     * @throws UserNotFoundException
+     */
+    @RequestMapping(value = "userInfo/infoUpdate", method = RequestMethod.POST)
+    private Map<String, Object> userInfoUpdated(@RequestBody Map<String, Object> userInfoMap) throws ParamNotFoundException, UserNotFoundException {
+        Integer userId = (Integer) userInfoMap.get("userId");
+        Integer gradeIndex = (Integer) userInfoMap.get("gradeIndex");
+        String contactInfo = (String) userInfoMap.get("contactInfo");
+        String addressInfo = (String) userInfoMap.get("addressInfo");
+        if (userId == null) {//如果没有userId信息
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        if (gradeIndex == null) {
+            throw new ParamNotFoundException("gradeIndex参数为空");
+        }
+        if (contactInfo == null) {
+            throw new ParamNotFoundException("contactInfo参数为空");
+        }
+        if (addressInfo == null) {
+            throw new ParamNotFoundException("addressInfo参数为空");
+        }
+        //查找用户
+        User user = userCenterService.getUserByUserId(userId);
+        if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
+            throw new UserNotFoundException("用户不存在");
+        }
+        //计算年份
+        Year year = new Year();
+        Integer grade = year.getYear(year.yearChanged(), gradeIndex);
+        //更新信息
+        user.setContactInformation(contactInfo);
+        user.setDefaultShippingAddress(contactInfo);
+        user.setGrade(grade);
+        //更新数据库
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (userCenterService.updateUser(user)) {//如果成功
+            map.put("errorCode", 0);
+            map.put("success", true);
+        }
         return map;
     }
 
@@ -189,6 +291,7 @@ public class UserCenterController {
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
         }
+        //查找用户
         User user = userCenterService.getUserByUserId(userId);
         if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
             throw new UserNotFoundException("用户不存在");
@@ -235,12 +338,21 @@ public class UserCenterController {
         return map;
     }
 
+    /**
+     * 根据用户id查找用户收藏
+     * @param userIdMap
+     * @return
+     * @throws ParamNotFoundException
+     * @throws UserNotFoundException
+     * @throws CommodityNotFoundException
+     */
     @RequestMapping(value = "/userFavors", method = RequestMethod.POST)
     private Map<String, Object> userFavors(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
         }
+        //查找用户
         User user = userCenterService.getUserByUserId(userId);
         if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
             throw new UserNotFoundException("用户不存在");
@@ -277,12 +389,21 @@ public class UserCenterController {
         return map;
     }
 
+    /**
+     * 根据用户id查找用户预订
+     * @param userIdMap
+     * @return
+     * @throws ParamNotFoundException
+     * @throws UserNotFoundException
+     * @throws CommodityNotFoundException
+     */
     @RequestMapping(value = "/userBookings", method = RequestMethod.POST)
     private Map<String, Object> userBookings(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
         }
+        //查找用户
         User user = userCenterService.getUserByUserId(userId);
         if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
             throw new UserNotFoundException("用户不存在");
