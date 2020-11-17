@@ -48,4 +48,16 @@
 		user
 		WHERE user_id = #{userId}
 	</delete>
+
+	<select id="getUserListBySearching" parameterType="java.lang.String" resultType="com.newbee.maggie.entity.User">
+		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, grade, authority, open_id
+		FROM user
+		<if test="keyword != null">WHERE nickname like #{keyword}</if>
+	</select>
+
+	<select id="getContactInfoByUserId" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT contact_information
+		FROM user
+		WHERE user_id = #{userId}
+	</select>
 </mapper>

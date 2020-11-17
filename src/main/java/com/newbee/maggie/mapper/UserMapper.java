@@ -2,6 +2,8 @@ package com.newbee.maggie.mapper;
 
 import com.newbee.maggie.entity.User;
 
+import java.util.List;
+
 public interface UserMapper {
 
     /**
@@ -50,4 +52,18 @@ public interface UserMapper {
      * @return
      */
     int deleteUserByUserId(Integer userId);
+
+    /**
+     * 根据关键词查找用户
+     * @param keyword
+     * @return
+     */
+    List<User> getUserListBySearching(String keyword);
+
+    /**
+     * 根据userId查找用户联系方式
+     * @param userId
+     * @return
+     */
+    String getContactInfoByUserId(Integer userId);
 }

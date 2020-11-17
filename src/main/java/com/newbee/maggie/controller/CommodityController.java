@@ -25,7 +25,7 @@ public class CommodityController {
      * @return
      * @throws CommodityNotFoundException
      */
-    @RequestMapping(value = "information", method = RequestMethod.POST)
+    @RequestMapping(value = "/information", method = RequestMethod.POST)
     private Map<String, Object> commodityInfo(@RequestBody Map<String, Integer> cmIdMap) throws ParamNotFoundException, CommodityNotFoundException {
         Integer cmId = cmIdMap.get("cmId");
         if (cmId == null) {
@@ -37,6 +37,9 @@ public class CommodityController {
             throw new CommodityNotFoundException("商品不存在");
         }
 
+        Integer userId = commodity.getUserId();
+        String contactInfo = commodityService.getContactInfoByUserId(userId);
+        map.put("contactInfo", contactInfo);
         map.put("errorCode", 0);
         //处理图片url，以","作为分隔符
         String pictureUrl = commodity.getPictureUrl();
@@ -55,7 +58,7 @@ public class CommodityController {
         } else {//没有","，即只有一个url
             String[] pictureUrls = new String[]{pictureUrl};
             Commodities commodities = new Commodities(commodity, pictureUrls);
-            map.put("commodityList", commodities);
+            map.put("commodityInfo", commodities);
             List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();
             HashMap<String, Object> urlsMap = new HashMap<String, Object>();
             urlsMap.put("urlId", 0);//这里添加一个url就可以了

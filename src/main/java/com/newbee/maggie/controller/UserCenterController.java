@@ -235,7 +235,7 @@ public class UserCenterController {
      * @throws ParamNotFoundException
      * @throws UserNotFoundException
      */
-    @RequestMapping(value = "userInfo/infoUpdate", method = RequestMethod.POST)
+    @RequestMapping(value = "/userInfo/infoUpdate", method = RequestMethod.POST)
     private Map<String, Object> userInfoUpdated(@RequestBody Map<String, Object> userInfoMap) throws ParamNotFoundException, UserNotFoundException {
         Integer userId = (Integer) userInfoMap.get("userId");
         Integer gradeIndex = (Integer) userInfoMap.get("gradeIndex");

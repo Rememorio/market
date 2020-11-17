@@ -33,8 +33,49 @@ public interface CommodityMapper {
     List<Commodity> getCmList();
 
     /**
-     * 返回用户搜索的商品
+     * 返回通过的商品数
+     * @return
+     */
+    Integer getApprovedCmCount();
+
+    /**
+     * 返回所有通过的商品
+     * @return
+     */
+    List<Commodity> getApprovedCmList();
+
+    /**
+     * 返回用户搜索的商品，默认排序
+     * @param keyword
      * @return
      */
     List<Commodity> getCmListBySearching(String keyword);
+
+    /**
+     * 返回用户搜索的商品，价格升序
+     * @param keyword
+     * @return
+     */
+    List<Commodity> getCmListBySearchingPriceUp(String keyword);
+
+    /**
+     * 返回用户搜索的商品，价格降序
+     * @param keyword
+     * @return
+     */
+    List<Commodity> getCmListBySearchingPriceDown(String keyword);
+
+    /**
+     * 返回用户搜索的商品，时间最新
+     * @param keyword
+     * @return
+     */
+    List<Commodity> getCmListBySearchingTimeNew(String keyword);
+
+    /**
+     * 返回用户搜索的商品，时间最旧
+     * @param keyword
+     * @return
+     */
+    List<Commodity> getCmListBySearchingTimeOld(String keyword);
 }

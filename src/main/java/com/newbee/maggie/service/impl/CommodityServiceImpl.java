@@ -2,7 +2,9 @@ package com.newbee.maggie.service.impl;
 
 import com.newbee.maggie.entity.Commodities;
 import com.newbee.maggie.entity.Commodity;
+import com.newbee.maggie.entity.User;
 import com.newbee.maggie.mapper.CommodityMapper;
+import com.newbee.maggie.mapper.UserMapper;
 import com.newbee.maggie.service.CommodityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Service;
 public class CommodityServiceImpl implements CommodityService {
     @Autowired
     private CommodityMapper commodityMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public Commodity getCommodityByCmId(Integer cmId) {
@@ -30,5 +35,10 @@ public class CommodityServiceImpl implements CommodityService {
             commodities = new Commodities(commodity, pictureUrls);
         }
         return commodities;
+    }
+
+    @Override
+    public String getContactInfoByUserId(Integer userId) {
+        return userMapper.getContactInfoByUserId(userId);
     }
 }

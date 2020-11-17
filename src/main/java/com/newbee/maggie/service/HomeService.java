@@ -2,6 +2,7 @@ package com.newbee.maggie.service;
 
 import com.newbee.maggie.entity.Commodities;
 import com.newbee.maggie.entity.Commodity;
+import com.newbee.maggie.entity.User;
 
 import java.util.List;
 
@@ -17,4 +18,53 @@ public interface HomeService {
      * @return
      */
     public List<Commodities> getRecommendedCommodities();
+
+    /**
+     * 搜索用户
+     * @param searchInput
+     * @return
+     */
+    public List<User> searchUser(String searchInput);
+
+    /**
+     * 搜索商品
+     * @param searchInput
+     * @return
+     */
+    public List<Commodity> searchCommodity(String searchInput);
+
+    /**
+     * 搜索商品，并把url进行分割
+     * @param searchInput
+     * @return
+     */
+    public List<Commodities> searchCommodities(String searchInput);
+
+    /**
+     * 搜索商品，价格升序
+     * @param searchInput
+     * @return
+     */
+    public List<Commodity> searchCommodityPriceUp(String searchInput);
+
+    /**
+     * 搜索商品，价格升序，并把url进行分割
+     * @param searchInput
+     * @return
+     */
+    public List<Commodities> searchCommoditiesPriceUp(String searchInput);
+
+    /**
+     * 搜索商品，时间最新
+     * @param searchInput
+     * @return
+     */
+    public List<Commodity> searchCommodityTimeNew(String searchInput);
+
+    /**
+     * 搜索商品，时间最新，并把url进行分割
+     * @param searchInput
+     * @return
+     */
+    public List<Commodities> searchCommoditiesTimeNew(String searchInput);
 }

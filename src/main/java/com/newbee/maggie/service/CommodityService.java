@@ -17,4 +17,11 @@ public interface CommodityService {
      * @return
      */
     public Commodities getCommoditiesByCmId(Integer cmId);
+
+    /**
+     * 通过用户id查找用户联系方式
+     * @param userId
+     * @return
+     */
+    public String getContactInfoByUserId(Integer userId);
 }

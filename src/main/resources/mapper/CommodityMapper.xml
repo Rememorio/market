@@ -20,16 +20,64 @@
 		FROM commodity
 	</select>
 
+	<select id="getApprovedCmCount" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM commodity
+		WHERE state = 2
+	</select>
+
 	<select id="getCmList" resultType="com.newbee.maggie.entity.Commodity">
 		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
 		FROM commodity
+	</select>
+
+	<select id="getApprovedCmList" resultType="com.newbee.maggie.entity.Commodity">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		WHERE state = 2
 	</select>
 
 	<select id="getCmListBySearching" resultType="com.newbee.maggie.entity.Commodity" parameterType="java.lang.String">
 		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
 		FROM commodity
 		<if test="keyword != null">
-			WHERE name like #{keyword}
+			WHERE name like #{keyword} and state = 2
 		</if>
+	</select>
+
+	<select id="getCmListBySearchingPriceUp" resultType="com.newbee.maggie.entity.Commodity" parameterType="java.lang.String">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		<if test="keyword != null">
+			WHERE name like #{keyword} and state = 2
+		</if>
+		ORDER BY price
+	</select>
+
+	<select id="getCmListBySearchingTimeNew" resultType="com.newbee.maggie.entity.Commodity" parameterType="java.lang.String">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		<if test="keyword != null">
+			WHERE name like #{keyword} and state = 2
+		</if>
+		ORDER BY launch_time
+	</select>
+
+	<select id="getCmListBySearchingPriceDown" resultType="com.newbee.maggie.entity.Commodity" parameterType="java.lang.String">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		<if test="keyword != null">
+			WHERE name like #{keyword} and state = 2
+		</if>
+		ORDER BY price DESC
+	</select>
+
+	<select id="getCmListBySearchingTimeOld" resultType="com.newbee.maggie.entity.Commodity" parameterType="java.lang.String">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		<if test="keyword != null">
+			WHERE name like #{keyword} and state = 2
+		</if>
+		ORDER BY launch_time DESC
 	</select>
 </mapper>
