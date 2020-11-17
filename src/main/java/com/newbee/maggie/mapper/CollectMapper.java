@@ -11,6 +11,19 @@ public interface CollectMapper {
      * @param userId
      * @return
      */
-    List<Collect> findCollectByUserId(Integer userId);
+    List<Collect> getCollectByUserId(Integer userId);
 
+    /**
+     * 插入收藏
+     * @param collect
+     * @return
+     */
+    int insertCollect(Collect collect);
+
+    /**
+     * 删除收藏
+     * @param collect
+     * @return
+     */
+    int deleteCollect(Collect collect);
 }

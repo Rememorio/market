@@ -3,10 +3,33 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newbee.maggie.mapper.BuyMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
-    <select id="findBuyByUserId" resultType="com.newbee.maggie.entity.Buy"><!--编写sql语句-->
+    <select id="getBuyByUserId" resultType="com.newbee.maggie.entity.Buy"><!--编写sql语句-->
 		SELECT cm_id, user_id, order_id, time_of_transaction
 		FROM buy
 		WHERE user_id = #{userId}
 	</select>
 
+	<select id="getBuyByCmId" resultType="com.newbee.maggie.entity.Buy">
+		SELECT cm_id, user_id, order_id, time_of_transaction
+		FROM buy
+		WHERE cm_id = #{cmId}
+	</select>
+
+	<select id="getIdCount" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM buy
+	</select>
+
+	<insert id="insertBuy" parameterType="com.newbee.maggie.entity.Buy"
+			keyProperty="cm_id" keyColumn="cm_id" useGeneratedKeys="false">
+		INSERT INTO
+		buy(cm_id, user_id, order_id, time_of_transaction)
+		VALUES(#{cmId}, #{userId}, #{orderId}, #{timeOfTransaction})
+	</insert>
+
+	<delete id="deleteBuy" parameterType="java.lang.Integer">
+		DELETE FROM
+		buy
+		WHERE cm_id = #{cmId}
+	</delete>
 </mapper>

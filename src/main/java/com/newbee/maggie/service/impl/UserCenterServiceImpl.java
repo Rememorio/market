@@ -53,10 +53,6 @@ public class UserCenterServiceImpl implements UserCenterService {
             // 设置默认值
             Integer userId = userMapper.getIdCount() + 1;
             user.setUserId(userId);//生成用户id
-            user.setContactInformation("请输入联系方式");//联系方式
-            user.setDefaultShippingAddress("请输入收货地址");//默认地址置空
-            user.setGrade(2018);//默认2018
-            user.setAuthority(0);//默认没有管理员权限
             try {
                 int effectedNum = userMapper.insertUser(user);
                 if (effectedNum > 0) {
@@ -121,16 +117,16 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Override
     public List<Buy> getBuyByUserId(Integer userId) {
-        return buyMapper.findBuyByUserId(userId);
+        return buyMapper.getBuyByUserId(userId);
     }
 
     @Override
     public List<Collect> getCollectByUserId(Integer userId) {
-        return collectMapper.findCollectByUserId(userId);
+        return collectMapper.getCollectByUserId(userId);
     }
 
     @Override
     public List<Reserve> getReserveByUserId(Integer userId) {
-        return reserveMapper.findReserveByUserId(userId);
+        return reserveMapper.getReserveByUserId(userId);
     }
 }

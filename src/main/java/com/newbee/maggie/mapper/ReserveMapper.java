@@ -10,5 +10,32 @@ public interface ReserveMapper {
      * @param userId
      * @return
      */
-    List<Reserve> findReserveByUserId(Integer userId);
+    List<Reserve> getReserveByUserId(Integer userId);
+
+    /**
+     * 根据商品id查找预定信息
+     * @param cmId
+     * @return
+     */
+    List<Reserve> getReserveByCmId(Integer cmId);
+
+    /**
+     * 获取Reserve表元组数，方便生成reserveId
+     * @return
+     */
+    Integer getIdCount();
+
+    /**
+     * 插入预订
+     * @param reserve
+     * @return
+     */
+    int insertReserve(Reserve reserve);
+
+    /**
+     * 删除预订
+     * @param cmId
+     * @return
+     */
+    int deleteReserve(Integer cmId);
 }

@@ -122,33 +122,84 @@ public class UserCenterController {
     }
 
     /**
-     * 根据openid, session_key和用户名插入新用户，并返回用户id
-     * @param userNameMap
+     * 根据openid, session_key和iv获取解密数据
+     * @param dataMap
      * @return
      * @throws ParamNotFoundException
      */
-    @RequestMapping(value = "/getUserId", method = RequestMethod.POST)
-    private Map<String, Object> getUserId(@RequestBody Map<String, String> userNameMap) throws ParamNotFoundException {
-        String openId = userNameMap.get("openId");
-        String sessionKey = userNameMap.get("sessionKey");
-        String nickname = userNameMap.get("userName");
+    @RequestMapping(value = "/getData", method = RequestMethod.POST)
+    private Map<String, Object> getDecryptedData(@RequestBody Map<String, String> dataMap) throws ParamNotFoundException {
+        String openId = dataMap.get("openId");
+        String sessionKey = dataMap.get("sessionKey");
+        String encryptedData = dataMap.get("encryptedData");
+        String iv = dataMap.get("iv");
         if (openId == null || openId.length() == 0) {
             throw new ParamNotFoundException("openId不能为空");
         }
         if (sessionKey == null || sessionKey.length() == 0) {
-            throw new ParamNotFoundException("sessionKet不能为空");
+            throw new ParamNotFoundException("sessionKey不能为空");
         }
-        if (nickname == null || nickname.length() == 0) {
-            throw new ParamNotFoundException("userName不能为空");
+        if (encryptedData == null || encryptedData.length() == 0) {
+            throw new ParamNotFoundException("encryptedData不能为空");
         }
-        User user = new User(nickname, sessionKey, openId);
-        Integer userId = userCenterService.addUser(user);//add函数成功则返回用户id
-        //封装信息
+        if (iv == null || iv.length() == 0) {
+            throw new ParamNotFoundException("iv不能为空");
+        }
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("errorCode", 0);
-        map.put("userId", userId);
+        //解密数据
+        try {
+            String result = AESUtil.decryptWXAppletInfo(sessionKey, encryptedData, iv);
+            map.put("errorCode", 0);
+            map.put("rawData", result);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //能运行到这里肯定有问题
+        map.put("errorCode", 1);
         return map;
     }
+
+//    /**
+//     * 根据openid, session_key和用户信息插入新用户，并返回用户id
+//     * @param dataMap
+//     * @return
+//     * @throws ParamNotFoundException
+//     */
+//    @RequestMapping(value = "/getUserId", method = RequestMethod.POST)
+//    private Map<String, Object> getUserId(@RequestBody Map<String, String> dataMap) throws ParamNotFoundException {
+//        String openId = dataMap.get("openId");
+//        String sessionKey = dataMap.get("sessionKey");
+//        String encryptedData = dataMap.get("encryptedData");
+//        String iv = dataMap.get("iv");
+//        if (openId == null || openId.length() == 0) {
+//            throw new ParamNotFoundException("openId不能为空");
+//        }
+//        if (sessionKey == null || sessionKey.length() == 0) {
+//            throw new ParamNotFoundException("sessionKey不能为空");
+//        }
+//        if (encryptedData == null || encryptedData.length() == 0) {
+//            throw new ParamNotFoundException("encryptedData不能为空");
+//        }
+//        if (iv == null || iv.length() == 0) {
+//            throw new ParamNotFoundException("iv不能为空");
+//        }
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        //解密数据
+//        try {
+//            String result = AESUtil.decryptWXAppletInfo(sessionKey, encryptedData, iv);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        User user = new User(nickname, sessionKey, openId);
+//        Integer userId = userCenterService.addUser(user);//add函数成功则返回用户id
+//        //封装信息
+//        map.put("errorCode", 0);
+//        map.put("userId", userId);
+//        return map;
+//    }
 
     /**
      * 根据用户id查询是否具有管理员权限

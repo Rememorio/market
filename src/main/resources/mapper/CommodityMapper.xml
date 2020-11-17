@@ -80,4 +80,46 @@
 		</if>
 		ORDER BY launch_time DESC
 	</select>
+
+	<update id="changeStateToReserved" parameterType="java.lang.Integer">
+		UPDATE commodity
+		SET state = 4
+		WHERE cm_id = #{cmId}
+	</update>
+
+	<update id="changeStateToApproved" parameterType="java.lang.Integer">
+		UPDATE commodity
+		SET state = 2
+		WHERE cm_id = #{cmId}
+	</update>
+
+	<update id="changeStateToWaiting" parameterType="java.lang.Integer">
+		UPDATE commodity
+		SET state = 1
+		WHERE cm_id = #{cmId}
+	</update>
+
+	<update id="changeStateToNotApproved" parameterType="java.lang.Integer">
+		UPDATE commodity
+		SET state = 3
+		WHERE cm_id = #{cmId}
+	</update>
+
+	<update id="changeStateToSold" parameterType="java.lang.Integer">
+		UPDATE commodity
+		SET state = 5
+		WHERE cm_id = #{cmId}
+	</update>
+
+	<update id="changeStateToReported" parameterType="java.lang.Integer">
+		UPDATE commodity
+		SET state = 6
+		WHERE cm_id = #{cmId}
+	</update>
+
+	<update id="changeStateToNull" parameterType="java.lang.Integer">
+		UPDATE commodity
+		SET state = 7
+		WHERE cm_id = #{cmId}
+	</update>
 </mapper>

@@ -3,10 +3,33 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newbee.maggie.mapper.ReserveMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
-    <select id="findReserveByUserId" resultType="com.newbee.maggie.entity.Reserve"><!--编写sql语句-->
+    <select id="getReserveByUserId" resultType="com.newbee.maggie.entity.Reserve"><!--编写sql语句-->
 		SELECT cm_id, user_id, reserve_id, reserve_time
 		FROM reserve
 		WHERE user_id = #{userId}
 	</select>
 
+	<select id="getReserveByCmId" resultType="com.newbee.maggie.entity.Reserve">
+		SELECT cm_id, user_id, reserve_id, reserve_time
+		FROM reserve
+		WHERE cm_id = #{cmId}
+	</select>
+
+	<select id="getIdCount" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM reserve
+	</select>
+
+	<insert id="insertReserve" parameterType="com.newbee.maggie.entity.Reserve"
+			keyProperty="cm_id" keyColumn="cm_id" useGeneratedKeys="false">
+		INSERT INTO
+		reserve(cm_id, user_id, reserve_id, reserve_time)
+		VALUES(#{cmId}, #{userId}, #{reserveId}, #{reserveTime})
+	</insert>
+
+	<delete id="deleteReserve" parameterType="java.lang.Integer">
+		DELETE FROM
+		reserve
+		WHERE cm_id = #{cmId}
+	</delete>
 </mapper>

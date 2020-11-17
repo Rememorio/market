@@ -3,10 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newbee.maggie.mapper.CollectMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
-    <select id="findCollectByUserId" resultType="com.newbee.maggie.entity.Collect"><!--编写sql语句-->
+    <select id="getCollectByUserId" resultType="com.newbee.maggie.entity.Collect"><!--编写sql语句-->
 		SELECT user_id, cm_id
 		FROM collection
 		WHERE user_id = #{userId}
 	</select>
 
+	<insert id="insertCollect" parameterType="com.newbee.maggie.entity.Collect"
+			keyProperty="user_id, cm_id" keyColumn="user_id, cm_id" useGeneratedKeys="false">
+		INSERT INTO
+		collection(user_id, cm_id)
+		VALUES(#{userId}, #{cmId})
+	</insert>
+
+	<delete id="deleteCollect" parameterType="com.newbee.maggie.entity.Collect">
+		DELETE FROM
+		collection
+		WHERE user_id = #{userId} and cm_id = #{cmId}
+	</delete>
 </mapper>

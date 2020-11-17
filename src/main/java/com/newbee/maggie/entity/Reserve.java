@@ -1,5 +1,8 @@
 package com.newbee.maggie.entity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Reserve {
     //商品id
     private Integer cmId;
@@ -14,6 +17,15 @@ public class Reserve {
         this.cmId = cmId;
         this.userId = userId;
         this.reserveId = reserveId;
+        this.reserveTime = reserveTime;
+    }
+
+    public Reserve(Integer cmId, Integer userId) {
+        this.cmId = cmId;
+        this.userId = userId;
+        Date date = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        String reserveTime = ft.format(date);
         this.reserveTime = reserveTime;
     }
 

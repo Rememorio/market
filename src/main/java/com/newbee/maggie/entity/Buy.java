@@ -1,5 +1,8 @@
 package com.newbee.maggie.entity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Buy {
     //商品id
     private Integer cmId;
@@ -14,6 +17,15 @@ public class Buy {
         this.cmId = cmId;
         this.userId = userId;
         this.orderId = orderId;
+        this.timeOfTransaction = timeOfTransaction;
+    }
+
+    public Buy(Integer cmId, Integer userId) {
+        this.cmId = cmId;
+        this.userId = userId;
+        Date date = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        String timeOfTransaction = ft.format(date);
         this.timeOfTransaction = timeOfTransaction;
     }
 
