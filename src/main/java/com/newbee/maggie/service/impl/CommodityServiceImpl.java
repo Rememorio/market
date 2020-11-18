@@ -3,6 +3,7 @@ package com.newbee.maggie.service.impl;
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.mapper.*;
 import com.newbee.maggie.service.CommodityService;
+import com.newbee.maggie.util.CommodityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -139,7 +140,10 @@ public class CommodityServiceImpl implements CommodityService {
     @Override
     public Boolean addBuy(Buy buy) {
         //先试图插入buy表
-        Integer orderId = buyMapper.getIdCount() + 1;
+        Integer orderId = reserveMapper.getReserveIdByCmId(buy.getCmId());
+        if (orderId == null) {
+            throw new RuntimeException("可能是该商品还没有被预定，无法购买");
+        }
         buy.setOrderId(orderId);//设置orderId
         try {
             int effectedNum = buyMapper.insertBuy(buy);

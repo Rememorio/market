@@ -43,7 +43,7 @@ public class Commodities {
         this.address = commodity.getAddress();
         this.classify = commodity.getClassify();
         this.cmId = commodity.getCmId();
-        this.date = commodity.getDate();
+        this.date = commodity.getLaunchTime();
         this.details = commodity.getDetails();
         this.isNew = commodity.getIsNew();
         this.name = commodity.getName();

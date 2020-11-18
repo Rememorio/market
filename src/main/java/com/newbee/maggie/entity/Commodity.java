@@ -24,7 +24,7 @@ public class Commodity {
     //图片url
     private String pictureUrl;
     //上传时间
-    private String date;
+    private String launchTime;
     //是否全新
     /**
      * 0-非全新，1-全新
@@ -36,7 +36,24 @@ public class Commodity {
      */
     private int state;
 
-    public Commodity(Integer cmId, String name, int classify, String details, float price, Integer userId, int address, String pictureUrl, String date, int isNew, int state) {
+    /**
+     * 合并图片url
+     * @param pictureUrls
+     * @return
+     */
+    private String combineUrls(String[] pictureUrls) {
+        StringBuilder pictureUrl = new StringBuilder();
+        for (String url: pictureUrls) {
+            pictureUrl.append(url).append(",");
+        }
+        if (!pictureUrl.toString().equals("")) {//如果不为空，则删除最后一个","
+            return pictureUrl.substring(0, pictureUrl.length()-1);
+        } else {
+            return pictureUrl.toString();
+        }
+    }
+
+    public Commodity(Integer cmId, String name, int classify, String details, float price, Integer userId, int address, String pictureUrl, String launchTime, int isNew, int state) {
         this.cmId = cmId;
         this.name = name;
         this.classify = classify;
@@ -45,9 +62,23 @@ public class Commodity {
         this.userId = userId;
         this.address = address;
         this.pictureUrl = pictureUrl;
-        this.date = date;
+        this.launchTime = launchTime;
         this.isNew = isNew;
         this.state = state;
+    }
+
+    public Commodity(String name, int classify, String details, float price, Integer userId, int address, String[] pictureUrls, String launchTime, int isNew) {
+        //这个构造函数差cmId
+        this.name = name;
+        this.classify = classify;
+        this.details = details;
+        this.price = price;
+        this.userId = userId;
+        this.address = address;
+        this.launchTime = launchTime;
+        this.pictureUrl = combineUrls(pictureUrls);
+        this.isNew = isNew;
+        this.state = 1;//待审核
     }
 
     public Integer getCmId() {
@@ -114,12 +145,12 @@ public class Commodity {
         this.pictureUrl = pictureUrl;
     }
 
-    public String getDate() {
-        return date;
+    public String getLaunchTime() {
+        return launchTime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setLaunchTime(String launchTime) {
+        this.launchTime = launchTime;
     }
 
     public int getIsNew() {
@@ -149,7 +180,7 @@ public class Commodity {
                 ", userId=" + userId +
                 ", address=" + address +
                 ", pictureUrl='" + pictureUrl + '\'' +
-                ", date='" + date + '\'' +
+                ", date='" + launchTime + '\'' +
                 ", isNew=" + isNew +
                 ", state=" + state +
                 '}';

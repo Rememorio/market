@@ -6,6 +6,7 @@ import com.newbee.maggie.service.AdminService;
 import com.newbee.maggie.util.CommodityNotFoundException;
 import com.newbee.maggie.util.ParamIllegalException;
 import com.newbee.maggie.util.ParamNotFoundException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,17 +24,21 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    private Logger logger = Logger.getLogger(AdminController.class);
+
     /**
      * 获取被举报的商品
      * @return
      */
     @RequestMapping(value = "/accused", method = RequestMethod.GET)
     private Map<String, Object> reportedCommodity() {
+        logger.info("执行请求被举报商品列表");
         List<Commodities> cmsList = new ArrayList<Commodities>();
         cmsList = adminService.getReportedCommodities();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("errorCode", 0);
         map.put("commodityList", cmsList);
+        logger.info("返回信息：" + map);
         return map;
     }
 
@@ -43,11 +48,13 @@ public class AdminController {
      */
     @RequestMapping(value = "/waiting", method = RequestMethod.GET)
     private Map<String, Object> waitingCommodity() {
+        logger.info("执行请求待审核商品列表");
         List<Commodities> cmsList = new ArrayList<Commodities>();
         cmsList = adminService.getWaitingCommodities();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("errorCode", 0);
         map.put("commodityList", cmsList);
+        logger.info("返回信息：" + map);
         return map;
     }
 
@@ -59,16 +66,17 @@ public class AdminController {
      */
     @RequestMapping(value = "/information", method = RequestMethod.POST)
     private Map<String, Object> commodityInfo(@RequestBody Map<String, Integer> cmIdMap) throws ParamNotFoundException, CommodityNotFoundException {
+        logger.info("执行请求商品详情");
         Integer cmId = cmIdMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
+        logger.info("正在请求cmId = " + cmId + "的商品详情");
         Map<String, Object> map = new HashMap<String, Object>();
         Commodity commodity = adminService.getCommodityByCmId(cmId);
         if (commodity == null) {
             throw new CommodityNotFoundException("商品不存在");
         }
-
         Integer userId = commodity.getUserId();
         String contactInfo = adminService.getContactInfoByUserId(userId);
         map.put("contactInfo", contactInfo);
@@ -98,6 +106,7 @@ public class AdminController {
             urlsMapList.add(urlsMap);
             map.put("urlList", urlsMapList);
         }
+        logger.info("返回信息：" + map);
         return map;
     }
 
@@ -109,6 +118,7 @@ public class AdminController {
      */
     @RequestMapping(value = "/changeState", method = RequestMethod.POST)
     private Map<String, Object> changeState(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException, ParamIllegalException {
+        logger.info("执行审核商品请求");
         Integer cmId = idMap.get("cmId");
         Integer toState = idMap.get("toState");
         if (cmId == null) {
@@ -117,6 +127,7 @@ public class AdminController {
         if (toState == null) {
             throw new ParamNotFoundException("toState参数为空");
         }
+        logger.info("正在请求将cmId = " + cmId + "的状态改为" + toState);
         Map<String, Object> map = new HashMap<String, Object>();
         //尝试更改状态
         if (toState == 2) {//审核通过
@@ -124,6 +135,7 @@ public class AdminController {
                 map.put("errorCode", 0);
                 map.put("cmId", cmId);
                 map.put("state", 2);
+                logger.info("返回信息：" + map);
                 return map;
             }
         } else if (toState == 3) {//审核不通过
@@ -131,13 +143,14 @@ public class AdminController {
                 map.put("errorCode", 0);
                 map.put("cmId", cmId);
                 map.put("state", 3);
+                logger.info("返回信息：" + map);
                 return map;
             }
         } else {
             throw new ParamIllegalException("toState参数不合法");
         }
-        //估计运行不到这里
-        map.put("errorCode", 1);
+        //理论上运行不到这里
+        logger.info("太阳从西边出来了");
         return map;
     }
 }

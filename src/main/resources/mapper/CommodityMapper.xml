@@ -119,7 +119,7 @@
 
 	<update id="changeStateToNull" parameterType="java.lang.Integer">
 		UPDATE commodity
-		SET state = 0
+		SET state = 7
 		WHERE cm_id = #{cmId}
 	</update>
 
