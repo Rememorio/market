@@ -119,7 +119,19 @@
 
 	<update id="changeStateToNull" parameterType="java.lang.Integer">
 		UPDATE commodity
-		SET state = 7
+		SET state = 0
 		WHERE cm_id = #{cmId}
 	</update>
+
+	<select id="getReportedCmList" resultType="com.newbee.maggie.entity.Commodity">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		WHERE state = 6
+	</select>
+
+	<select id="getWaitingCmList" resultType="com.newbee.maggie.entity.Commodity">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		WHERE state = 1
+	</select>
 </mapper>

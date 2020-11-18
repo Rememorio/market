@@ -45,6 +45,8 @@ public interface CommodityMapper {
      */
     List<Commodity> getApprovedCmList();
 
+
+
     /**
      * 返回用户搜索的商品，默认排序
      * @param keyword
@@ -134,4 +136,16 @@ public interface CommodityMapper {
      * @return
      */
     int changeStateToNull(Integer cmId);
+
+    /**
+     * 返回被举报的商品列表
+     * @return
+     */
+    List<Commodity> getReportedCmList();
+
+    /**
+     * 返回待审核的商品列表
+     * @return
+     */
+    List<Commodity> getWaitingCmList();
 }

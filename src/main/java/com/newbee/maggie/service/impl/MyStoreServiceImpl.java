@@ -16,17 +16,12 @@ public class MyStoreServiceImpl implements MyStoreService {
     @Autowired
     private CommodityMapper commodityMapper;
 
-    @Autowired
-    private UserMapper userMapper;
-
-    @Override
-    public List<Commodity> getCmListByUserId(Integer userId) {
-        return commodityMapper.getCmListByUserId(userId);
-    }
-
-    @Override
-    public List<Commodities> getCmsListByUserId(Integer userId) {
-        List<Commodity> commodityList = commodityMapper.getCmListByUserId(userId);
+    /**
+     * 分割url
+     * @param commodityList
+     * @return
+     */
+    private List<Commodities> splitUrl(List<Commodity> commodityList) {
         List<Commodities> commoditiesList = new ArrayList<Commodities>();
         for (Commodity commodity: commodityList) {
             Commodities commodities;
@@ -41,5 +36,16 @@ public class MyStoreServiceImpl implements MyStoreService {
             commoditiesList.add(commodities);
         }
         return commoditiesList;
+    }
+
+    @Override
+    public List<Commodity> getCmListByUserId(Integer userId) {
+        return commodityMapper.getCmListByUserId(userId);
+    }
+
+    @Override
+    public List<Commodities> getCmsListByUserId(Integer userId) {
+        List<Commodity> commodityList = commodityMapper.getCmListByUserId(userId);
+        return splitUrl(commodityList);
     }
 }
