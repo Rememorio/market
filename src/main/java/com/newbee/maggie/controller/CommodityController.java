@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,10 +83,10 @@ public class CommodityController {
     private Map<String, Object> commodityCollection(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
         logger.info("执行收藏请求");
         Integer userId = idMap.get("userId");
-        Integer cmId = idMap.get("cmId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
         }
+        Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
@@ -115,10 +114,10 @@ public class CommodityController {
     private Map<String, Object> commodityCollectionCancel(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
         logger.info("执行取消收藏请求");
         Integer userId = idMap.get("userId");
-        Integer cmId = idMap.get("cmId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
         }
+        Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
@@ -146,10 +145,10 @@ public class CommodityController {
     private Map<String, Object> commodityReserve(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
         logger.info("执行预订请求");
         Integer userId = idMap.get("userId");
-        Integer cmId = idMap.get("cmId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
         }
+        Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
@@ -179,10 +178,10 @@ public class CommodityController {
     private Map<String, Object> commodityReserveCancel(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
         logger.info("执行取消预订请求");
         Integer userId = idMap.get("userId");
-        Integer cmId = idMap.get("cmId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
         }
+        Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
@@ -209,10 +208,10 @@ public class CommodityController {
     private Map<String, Object> commodityBuy(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
         logger.info("执行购买请求");
         Integer userId = idMap.get("userId");
-        Integer cmId = idMap.get("cmId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
         }
+        Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
@@ -242,10 +241,10 @@ public class CommodityController {
     private Map<String, Object> commodityBuyDelete(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
         logger.info("执行删除购买请求");
         Integer userId = idMap.get("userId");
-        Integer cmId = idMap.get("cmId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
         }
+        Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
@@ -272,10 +271,10 @@ public class CommodityController {
     private Map<String, Object> commodityReport(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
         logger.info("执行举报请求");
         Integer userId = idMap.get("userId");
-        Integer cmId = idMap.get("cmId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
         }
+        Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }

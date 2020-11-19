@@ -120,10 +120,10 @@ public class AdminController {
     private Map<String, Object> changeState(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException, ParamIllegalException {
         logger.info("执行审核商品请求");
         Integer cmId = idMap.get("cmId");
-        Integer toState = idMap.get("toState");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
+        Integer toState = idMap.get("toState");
         if (toState == null) {
             throw new ParamNotFoundException("toState参数为空");
         }
