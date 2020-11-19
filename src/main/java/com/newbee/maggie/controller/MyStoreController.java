@@ -1,5 +1,6 @@
 package com.newbee.maggie.controller;
 
+import com.newbee.maggie.entity.Commodity;
 import com.newbee.maggie.util.ParamIllegalException;
 import org.apache.log4j.Logger;
 import com.newbee.maggie.entity.Commodities;
@@ -13,10 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.ProtocolException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/myStore")
@@ -28,6 +27,7 @@ public class MyStoreController {
 
     /**
      * 根据userId获取这个用户出售的商品
+     *
      * @param userIdMap
      * @return
      * @throws ParamNotFoundException
@@ -51,12 +51,13 @@ public class MyStoreController {
     }
 
     // 外网地址
-    private static final String SERVERADDRESS = "http://maggiemarket.design:8081/upload";
+    private static final String SERVERADDRESS = "http://maggiemarket.design:8081/picture/upload";
     // 本地地址
-    private static final String LOCALADDRESS = "C:/xampp/tomcat/webapps/upload";
+    private static final String LOCALADDRESS = "C:/xampp/tomcat/webapps/picture/upload";
 
     /**
      * 上传文件
+     *
      * @param request
      * @param file
      * @return
@@ -86,12 +87,15 @@ public class MyStoreController {
             type = fileName.contains(".") ? fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()) : null;
             logger.info("图片初始名称为：" + fileName + " 类型为：" + type);
             if (type != null) {
-                if ("GIF".equals(type.toUpperCase())||"PNG".equals(type.toUpperCase())||"JPG".equals(type.toUpperCase())) {
+                if ("GIF".equals(type.toUpperCase()) || "PNG".equals(type.toUpperCase()) || "JPG".equals(type.toUpperCase())) {
                     // 项目在容器中实际发布运行的根路径
                     //String realPath = request.getSession().getServletContext().getRealPath("/");
                     String realPath = LOCALADDRESS;
                     // 自定义的文件名称
-                    String trueFileName = String.valueOf(System.currentTimeMillis()) + "_userId=" + userId + "&filename=" + fileName;
+                    Date date = new Date();
+                    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddHHmmss");
+                    String uploadTime = ft.format(date);
+                    String trueFileName = "userId=" + userId + "_uploadTime=" + uploadTime + "_systemTime=" + String.valueOf(System.currentTimeMillis()) + "." + type;
                     // 设置存放图片文件的路径
                     path = realPath + "/" + trueFileName;
                     logger.info("存放图片文件的路径:" + path);
@@ -99,7 +103,7 @@ public class MyStoreController {
                     logger.info("文件成功上传到指定目录下");
                     map.put("errorCode", 0);
                     // 生成服务器端的地址
-                    String address = SERVERADDRESS + "/" +trueFileName;
+                    String address = SERVERADDRESS + "/" + trueFileName;
                     map.put("url", address);
                     logger.info("返回信息：" + map);
                     return map;
@@ -119,6 +123,7 @@ public class MyStoreController {
 
     /**
      * 删除文件
+     *
      * @param urlMap
      * @return
      * @throws ParamNotFoundException
@@ -133,13 +138,13 @@ public class MyStoreController {
         }
         int successCount = 0;
         int failureCount = 0;
-        for (String url: urlList) {
+        for (String url : urlList) {
             String urlAddress = url.replaceFirst(SERVERADDRESS, LOCALADDRESS);
             System.out.println(urlAddress);
             File file = new File(urlAddress);
             // 判断文件是否存在
             if (file.isFile() && file.exists()) {
-                if(file.delete()) {
+                if (file.delete()) {
                     logger.info("删除" + urlAddress + "成功");
                     successCount++;
                 } else {
@@ -158,8 +163,164 @@ public class MyStoreController {
         return map;
     }
 
-//    @RequestMapping(value = "/publish", method = RequestMethod.POST)
-//    public Map<String, Object> publishCommodity(@RequestBody Map<String, Object> cmMap) throws ParamNotFoundException, ParamIllegalException {
-//
-//    }
+    /**
+     * 发布商品
+     * @param cmMap
+     * @return
+     * @throws ParamNotFoundException
+     * @throws ParamIllegalException
+     */
+    @RequestMapping(value = "/publish", method = RequestMethod.POST)
+    public Map<String, Object> publishCommodity(@RequestBody Map<String, Object> cmMap) throws ParamNotFoundException, ParamIllegalException {
+        logger.info("执行请求发布商品");
+        String name = (String) cmMap.get("name");
+        if (name == null) {
+            throw new ParamNotFoundException("name参数为空");
+        }
+        Integer classify = (Integer) cmMap.get("classify");
+        if (classify == null) {
+            throw new ParamNotFoundException("classify参数为空");
+        }
+        String details = (String) cmMap.get("details");
+        if (details == null) {
+            throw new ParamNotFoundException("details参数为空");
+        }
+        String priceTemp = (String) cmMap.get("price");
+        if (priceTemp == null) {
+            throw new ParamNotFoundException("price参数为空");
+        }
+        Double price = Double.valueOf(priceTemp);
+        if (price.equals(0.0) || price < 0) {
+            throw new ParamIllegalException("price参数必须为正数");
+        }
+        Integer userId = (Integer) cmMap.get("userId");
+        if (userId == null) {
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        Integer address = (Integer) cmMap.get("address");
+        if (address == null) {
+            throw new ParamNotFoundException("address参数为空");
+        }
+        List<String> pictureUrls = (List<String>) cmMap.get("pictureUrls");
+        if (pictureUrls == null) {
+            throw new ParamNotFoundException("pictureUrls参数为空");
+        }
+        Integer isNew = (Integer) cmMap.get("isNew");
+        if (isNew == null) {
+            throw new ParamNotFoundException("isNew参数为空");
+        }
+        logger.info("userId = " + userId + "正在请求发布商品");
+        Commodity commodity = new Commodity(name, classify, details, price, userId, address, pictureUrls, isNew);
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (myStoreService.addCommodity(commodity)) {
+            map.put("errorCode", 0);
+            map.put("cmId", commodity.getCmId());
+            logger.info("返回信息：" + map);
+            return map;
+        }
+        //理论上运行不到这里
+        logger.info("太阳从西边出来了");
+        return map;
+    }
+
+    /**
+     * 修改商品
+     * @param cmMap
+     * @return
+     * @throws ParamNotFoundException
+     * @throws ParamIllegalException
+     */
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    public Map<String, Object> modifyCommodity(@RequestBody Map<String, Object> cmMap) throws ParamNotFoundException, ParamIllegalException {
+        logger.info("执行请求修改商品");
+        Integer cmId = (Integer) cmMap.get("cmId");
+        if (cmId == null) {
+            throw new ParamNotFoundException("cmId参数为空");
+        }
+        String name = (String) cmMap.get("name");
+        if (name == null) {
+            throw new ParamNotFoundException("name参数为空");
+        }
+        Integer classify = (Integer) cmMap.get("classify");
+        if (classify == null) {
+            throw new ParamNotFoundException("classify参数为空");
+        }
+        String details = (String) cmMap.get("details");
+        if (details == null) {
+            throw new ParamNotFoundException("details参数为空");
+        }
+        String priceTemp = (String) cmMap.get("price");
+        if (priceTemp == null) {
+            throw new ParamNotFoundException("price参数为空");
+        }
+        Double price = Double.valueOf(priceTemp);
+        if (price.equals(0.0) || price < 0) {
+            throw new ParamIllegalException("price参数必须为正数");
+        }
+        Integer userId = (Integer) cmMap.get("userId");
+        if (userId == null) {
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        Integer address = (Integer) cmMap.get("address");
+        if (address == null) {
+            throw new ParamNotFoundException("address参数为空");
+        }
+        List<String> pictureUrls = (List<String>) cmMap.get("pictureUrls");
+        if (pictureUrls == null) {
+            throw new ParamNotFoundException("pictureUrls参数为空");
+        }
+        Integer isNew = (Integer) cmMap.get("isNew");
+        if (isNew == null) {
+            throw new ParamNotFoundException("isNew参数为空");
+        }
+        logger.info("userId = " + userId + "正在请求修改商品");
+        Commodity commodity = new Commodity(cmId, name, classify, details, price, userId, address, pictureUrls, isNew);
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (myStoreService.updateCommodity(commodity)) {
+            map.put("errorCode", 0);
+            map.put("success", true);
+            logger.info("返回信息：" + map);
+            return map;
+        }
+        //理论上运行不到这里
+        logger.info("太阳从西边出来了");
+        return map;
+    }
+
+    /**
+     * 下架商品
+     * @param idMap
+     * @return
+     * @throws ParamNotFoundException
+     * @throws ParamIllegalException
+     */
+    @RequestMapping(value = "/withdraw", method = RequestMethod.POST)
+    public Map<String, Object> withdrawCommodity(@RequestBody Map<String, Object> idMap) throws ParamNotFoundException, ParamIllegalException {
+        logger.info("执行下架商品请求");
+        Integer cmId = (Integer) idMap.get("cmId");
+        if (cmId == null) {
+            throw new ParamNotFoundException("cmId参数为空");
+        }
+        Integer userId = (Integer) idMap.get("userId");
+        if (userId == null) {
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        logger.info("userId = " + userId + "正在下架cmId = " + cmId + "的商品");
+        //判断是不是这个用户的商品
+        Integer realUserId = myStoreService.getUserIdByCmId(cmId);
+        if (!userId.equals(realUserId)) {
+            throw new ParamIllegalException("该用户不是这件商品的卖家，无权删除");
+        }
+        //删除商品
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (myStoreService.deleteCommodity(cmId)) {
+            map.put("errorCode", 0);
+            map.put("success", true);
+            logger.info("返回信息：" + map);
+            return map;
+        }
+        //理论上运行不到这里
+        logger.info("太阳从西边出来了");
+        return map;
+    }
 }

@@ -93,7 +93,7 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public boolean deleteUserByUserId(Integer userId) {
         // 判断用户id是否为空
-        if (userId.intValue() > 0) {
+        if (userId > 0) {
             try {
                 // 删除用户信息
                 int effectedNum = userMapper.deleteUserByUserId(userId);

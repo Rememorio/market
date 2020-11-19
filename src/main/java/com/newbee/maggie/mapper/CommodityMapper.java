@@ -1,6 +1,7 @@
 package com.newbee.maggie.mapper;
 
 import com.newbee.maggie.entity.Commodity;
+import com.newbee.maggie.entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -44,8 +45,6 @@ public interface CommodityMapper {
      * @return
      */
     List<Commodity> getApprovedCmList();
-
-
 
     /**
      * 返回用户搜索的商品，默认排序
@@ -148,4 +147,32 @@ public interface CommodityMapper {
      * @return
      */
     List<Commodity> getWaitingCmList();
+
+    /**
+     * 添加新商品
+     * @param commodity
+     * @return
+     */
+    int insertCommodity(Commodity commodity);
+
+    /**
+     * 修改商品信息
+     * @param commodity
+     * @return
+     */
+    int updateCommodity(Commodity commodity);
+
+    /**
+     * 根据商品id删除商品
+     * @param cmId
+     * @return
+     */
+    int deleteCmByCmId(Integer cmId);
+
+    /**
+     * 根据商品id查找卖家的id
+     * @param cmId
+     * @return
+     */
+    Integer getUserIdByCmId(Integer cmId);
 }

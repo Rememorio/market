@@ -20,4 +20,32 @@ public interface MyStoreService {
      * @return
      */
     public List<Commodities> getCmsListByUserId(Integer userId);
+
+    /**
+     * 根据商品id查找用户id，判断是不是这个卖家
+     * @param cmId
+     * @return
+     */
+    public Integer getUserIdByCmId(Integer cmId);
+
+    /**
+     * 添加商品
+     * @param commodity
+     * @return
+     */
+    public Boolean addCommodity(Commodity commodity);
+
+    /**
+     * 修改商品
+     * @param commodity
+     * @return
+     */
+    public Boolean updateCommodity(Commodity commodity);
+
+    /**
+     * 删除商品
+     * @param cmId
+     * @return
+     */
+    public Boolean deleteCommodity(Integer cmId);
 }

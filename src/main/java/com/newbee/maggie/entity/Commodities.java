@@ -15,7 +15,7 @@ public class Commodities {
     //描述
     private String details;
     //价格
-    private float price;
+    private Double price;
     //用户id
     private Integer userId;
     //地址
@@ -84,11 +84,11 @@ public class Commodities {
         this.details = details;
     }
 
-    public float getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

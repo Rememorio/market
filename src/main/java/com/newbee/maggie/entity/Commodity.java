@@ -1,5 +1,9 @@
 package com.newbee.maggie.entity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 public class Commodity {
     //商品id
     private Integer cmId;
@@ -13,7 +17,7 @@ public class Commodity {
     //描述
     private String details;
     //价格
-    private float price;
+    private Double price;
     //用户id
     private Integer userId;
     //地址
@@ -41,7 +45,7 @@ public class Commodity {
      * @param pictureUrls
      * @return
      */
-    private String combineUrls(String[] pictureUrls) {
+    private String combineUrls(List<String> pictureUrls) {
         StringBuilder pictureUrl = new StringBuilder();
         for (String url: pictureUrls) {
             pictureUrl.append(url).append(",");
@@ -53,7 +57,7 @@ public class Commodity {
         }
     }
 
-    public Commodity(Integer cmId, String name, int classify, String details, float price, Integer userId, int address, String pictureUrl, String launchTime, int isNew, int state) {
+    public Commodity(Integer cmId, String name, int classify, String details, Double price, Integer userId, int address, String pictureUrl, String launchTime, int isNew, int state) {
         this.cmId = cmId;
         this.name = name;
         this.classify = classify;
@@ -67,7 +71,7 @@ public class Commodity {
         this.state = state;
     }
 
-    public Commodity(String name, int classify, String details, float price, Integer userId, int address, String[] pictureUrls, String launchTime, int isNew) {
+    public Commodity(String name, int classify, String details, Double price, Integer userId, int address, List<String> pictureUrls, int isNew) {
         //这个构造函数差cmId
         this.name = name;
         this.classify = classify;
@@ -75,6 +79,26 @@ public class Commodity {
         this.price = price;
         this.userId = userId;
         this.address = address;
+        Date date = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        String launchTime = ft.format(date);
+        this.launchTime = launchTime;
+        this.pictureUrl = combineUrls(pictureUrls);
+        this.isNew = isNew;
+        this.state = 1;//待审核
+    }
+
+    public Commodity(Integer cmId, String name, int classify, String details, Double price, Integer userId, int address, List<String> pictureUrls, int isNew) {
+        this.cmId = cmId;
+        this.name = name;
+        this.classify = classify;
+        this.details = details;
+        this.price = price;
+        this.userId = userId;
+        this.address = address;
+        Date date = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        String launchTime = ft.format(date);
         this.launchTime = launchTime;
         this.pictureUrl = combineUrls(pictureUrls);
         this.isNew = isNew;
@@ -113,11 +137,11 @@ public class Commodity {
         this.details = details;
     }
 
-    public float getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -180,7 +204,7 @@ public class Commodity {
                 ", userId=" + userId +
                 ", address=" + address +
                 ", pictureUrl='" + pictureUrl + '\'' +
-                ", date='" + launchTime + '\'' +
+                ", launchTime='" + launchTime + '\'' +
                 ", isNew=" + isNew +
                 ", state=" + state +
                 '}';

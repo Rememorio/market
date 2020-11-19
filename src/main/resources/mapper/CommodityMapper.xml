@@ -134,4 +134,38 @@
 		FROM commodity
 		WHERE state = 1
 	</select>
+
+	<insert id="insertCommodity" parameterType="com.newbee.maggie.entity.Commodity"
+			keyProperty="cm_id" keyColumn="cm_id" useGeneratedKeys="false">
+		INSERT INTO
+		commodity(cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state)
+		VALUES(#{cmId}, #{name}, #{classify}, #{details}, #{price}, #{userId}, #{address}, #{pictureUrl}, #{launchTime}, #{isNew}, #{state})
+	</insert>
+
+	<update id="updateCommodity" parameterType="com.newbee.maggie.entity.Commodity"><!-- 不能改cmId，userId和state -->
+		UPDATE commodity
+		<set>
+			<if test="name != null">name = #{name},</if>
+			<if test="classify != null">classify = #{classify},</if>
+			<if test="details != null">details = #{details},</if>
+			<if test="price != null">price = #{price},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="pictureUrl != null">picture_url = #{pictureUrl},</if>
+			<if test="launchTime != null">launch_time = #{launchTime},</if>
+			<if test="isNew != null">is_new = #{isNew}</if>
+		</set>
+		where cm_id = #{cmId} and user_id = #{userId}
+	</update>
+
+	<delete id="deleteCmByCmId" parameterType="java.lang.Integer">
+		DELETE FROM
+		commodity
+		WHERE cm_id = #{cmId}
+	</delete>
+
+	<select id="getUserIdByCmId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT user_id
+		FROM commodity
+		WHERE cm_id = #{cmId}
+	</select>
 </mapper>
