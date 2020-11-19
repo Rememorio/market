@@ -4,13 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newbee.maggie.mapper.UserMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
     <select id="getUserByUserName" resultType="com.newbee.maggie.entity.User"><!--编写sql语句-->
-		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, grade, authority, open_id
+		SELECT user_id, contact_information, nickname, default_shipping_address, grade, authority
 		FROM user
 		WHERE nickname = #{nickname}
 	</select>
 
 	<select id="getUserByUserId" resultType="com.newbee.maggie.entity.User">
-		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, grade, authority, open_id
+		SELECT user_id, contact_information, nickname, default_shipping_address, grade, authority
 		FROM user
 		WHERE user_id = #{userId}
 	</select>
@@ -20,17 +20,11 @@
 		FROM user
 	</select>
 
-	<select id="getUserIdByOpenId" resultType="java.lang.Integer">
-		SELECT user_id
-		FROM user
-		WHERE open_id = #{openId}
-	</select>
-
 	<insert id="insertUser" parameterType="com.newbee.maggie.entity.User"
 			keyProperty="user_id" keyColumn="user_id" useGeneratedKeys="true">
 		INSERT INTO
-		user(user_id, session_key, contact_information, nickname, default_shipping_address, grade, authority, open_id)
-		VALUES(#{userId}, #{sessionKey}, #{contactInformation}, #{nickname}, #{defaultShippingAddress}, #{grade}, #{authority}, #{openId})
+		user(user_id, contact_information, nickname, default_shipping_address, grade, authority)
+		VALUES(#{userId}, #{contactInformation}, #{nickname}, #{defaultShippingAddress}, #{grade}, #{authority})
 	</insert>
 
 	<update id="updateUser" parameterType="com.newbee.maggie.entity.User">
@@ -50,7 +44,7 @@
 	</delete>
 
 	<select id="getUserListBySearching" parameterType="java.lang.String" resultType="com.newbee.maggie.entity.User">
-		SELECT user_id, session_key, contact_information, nickname, default_shipping_address, grade, authority, open_id
+		SELECT user_id, contact_information, nickname, default_shipping_address, grade, authority
 		FROM user
 		<if test="keyword != null">WHERE nickname like #{keyword}</if>
 	</select>

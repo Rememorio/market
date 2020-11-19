@@ -31,6 +31,14 @@ public class WxLoginVO implements Serializable {
      */
     private String code;
 
+    public WxLoginVO(String encryptedData, String iv, String rawData, String signature, String code) {
+        this.encryptedData = encryptedData;
+        this.iv = iv;
+        this.rawData = rawData;
+        this.signature = signature;
+        this.code = code;
+    }
+
     public String getEncryptedData() {
         return encryptedData;
     }

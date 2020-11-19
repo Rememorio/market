@@ -27,12 +27,6 @@ public interface UserMapper {
     Integer getIdCount();
 
     /**
-     * 根据openid寻找userid，判断数据库有没有这个用户
-     * @return
-     */
-    Integer getUserIdByOpenId(String openId);
-
-    /**
      * 添加新用户
      * @param user
      * @return

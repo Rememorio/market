@@ -2,11 +2,13 @@ package com.newbee.maggie.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.newbee.maggie.controller.UserCenterController;
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.mapper.*;
 import com.newbee.maggie.service.UserCenterService;
 import com.newbee.maggie.util.*;
 import com.newbee.maggie.web.*;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,8 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Autowired
     private UserInfoMapper userInfoMapper;
 
+    private Logger logger = Logger.getLogger(UserCenterService.class);
+
     @Override
     public User getUserByNickname(String nickname) {
         return userMapper.getUserByUserName(nickname);
@@ -50,20 +54,17 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Transactional  //加上事务控制  当抛出RuntimeException异常  事务就会回滚
     @Override
-    public Integer addUser(User user) {
+    public boolean addUser(User user) {
         // 判定数据库里面有没有这个人
-        Integer userIdTemp = userMapper.getUserIdByOpenId(user.getOpenId());
-        if (userIdTemp != null)
+        User userTemp = userMapper.getUserByUserId(user.getUserId());
+        if (userTemp != null)
             throw new RuntimeException("数据库中已经有该用户，添加新用户失败");
         // 空值判断，主要是判断userName不为空
         if (user.getNickname() != null && user.getNickname().trim().length() != 0 && !user.getNickname().equals("")){
-            // 设置默认值
-            Integer userId = userMapper.getIdCount() + 1;
-            user.setUserId(userId);//生成用户id
             try {
                 int effectedNum = userMapper.insertUser(user);
                 if (effectedNum > 0) {
-                    return userId;
+                    return true;
                 } else {
                     throw new RuntimeException("添加新用户失败");
                 }
@@ -139,30 +140,59 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Override
     public ResponseVO<UserInfoVO> login(WxLoginVO loginVO) throws Exception {
+        logger.info("正在执行code2session");
         String code2SessionUrl = WxUtils.getApi(WxConsts.API_SESSION_KEY, loginVO.getCode());
+        logger.info("请求url：" + code2SessionUrl);
         String result = HttpUtils.doGet(code2SessionUrl);
+        logger.info("返回参数：" + result);
         WxAuthVO wxAuthVO = JSONObject.parseObject(result, WxAuthVO.class);
-
+        logger.info("openid&sessionKey: " + wxAuthVO);
+        //如果签名不一致
         if(!loginVO.getSignature().equals(WxUtils.getSignature(loginVO.getRawData(),wxAuthVO.getSessionKey()))){
             return new ResponseVO<UserInfoVO>(MsgError.WX_SIGNATURE.code(), MsgError.WX_SIGNATURE.getErrorMsg(),null);
         }
-
+        //如果成功获取到openid
         if (wxAuthVO.getOpenId() != null) {
+            logger.info("成功获取openId：" + wxAuthVO.getOpenId());
             UserInfo userinfo = null;
             UserInfoVO respUserInfo = null;
             userinfo = userInfoMapper.selectByOpenId(wxAuthVO.getOpenId());
+            //如果是新用户，那么就操作数据库
             if(userinfo == null){
+                logger.info("该用户为新用户，userInfo：" + userinfo);
                 WxUserInfoVO wxUserInfo = WxUtils.encryptedDataUserInfo(loginVO.getEncryptedData(), wxAuthVO.getSessionKey(), loginVO.getIv());
                 userinfo = JSON.parseObject(JSON.toJSONString(wxUserInfo),UserInfo.class);
+                //设置默认参数
+                Integer userId = userInfoMapper.getIdCount() + 1;
+                userinfo.setUserId(userId);//这里可能还要设置一下userId
                 userinfo.setUsertype("1");
-                userInfoMapper.insert(userinfo);
+                //生成user对象，准备插入user表
+                String nickname = userinfo.getNickname();
+                User user = new User(nickname);
+                user.setUserId(userId);
+                //开始插入user_info表
+                int effectedNum = userInfoMapper.insert(userinfo);
+                if (effectedNum > 0) {//如果插入成功
+                    logger.info("插入user_info表成功，userId：" + userId);
+                    //继续插入user表
+                    int effectedNumber = userMapper.insertUser(user);
+                    if (effectedNumber > 0) {
+                        logger.info("插入user表失败，userId：" + userId);
+                    } else {
+                        logger.info("插入user表失败，userId：" + userId);
+                    }
+                } else {
+                    logger.info("插入user_info表成功，userId：" + userId);
+                }
+            } else {
+                logger.info("该用户不是新用户，userInfo：" + userinfo);
             }
             respUserInfo = JSON.parseObject(JSON.toJSONString(userinfo),UserInfoVO.class);
             respUserInfo.setToken(TokenUtil.getToken(userinfo));
 
             return new ResponseVO<UserInfoVO>(MsgSuccess.OK.code(), MsgSuccess.OK.getSuccesMsg(), respUserInfo);
         }
-
+        //获取不到openid
         return new ResponseVO<UserInfoVO>(MsgError.COMMON_EMPTY.code(), MsgError.COMMON_EMPTY.getErrorMsg(),null);
     }
 }

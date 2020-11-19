@@ -2,15 +2,12 @@ package com.newbee.maggie.web;
 
 /**
  * Description: 用户信息 响应实体类
- * Auth: Frank
- * Date: 2019-08-09
- * Time: 下午 1:58
  */
 public class UserInfoVO {
     /**
      * 用户id
      */
-    private Integer id;
+    private Integer userId;
 
     /**
      * 用户openid
@@ -63,12 +60,12 @@ public class UserInfoVO {
      */
     private String token;
 
-    public Integer getId() {
-        return id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getOpenId() {
@@ -154,7 +151,7 @@ public class UserInfoVO {
     @Override
     public String toString() {
         return "UserInfoVO{" +
-                "id=" + id +
+                "userId=" + userId +
                 ", openId='" + openId + '\'' +
                 ", unionId='" + unionId + '\'' +
                 ", userType='" + userType + '\'' +

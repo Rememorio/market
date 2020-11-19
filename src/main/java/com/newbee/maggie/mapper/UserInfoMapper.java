@@ -16,4 +16,10 @@ public interface UserInfoMapper {
      * @return
      */
     int insert(UserInfo userInfo);
+
+    /**
+     * 获取用户数，方便生成用户id
+     * @return
+     */
+    Integer getIdCount();
 }

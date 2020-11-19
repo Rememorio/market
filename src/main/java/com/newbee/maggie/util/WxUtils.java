@@ -19,11 +19,7 @@ import java.util.Arrays;
 import java.util.Base64;
 
 /**
- * 微信用户信息解密工具
- *
- * @author Giam
- * @version 1.0
- * @date 2019/6/19
+ * Description: 微信用户信息解密工具
  */
 public class WxUtils {
     /**

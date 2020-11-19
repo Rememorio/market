@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 
 /**
- * 请求响应实体类
+ * Description: 请求响应实体类
  */
 public class ResponseVO<T> implements Serializable {
     private Integer code;

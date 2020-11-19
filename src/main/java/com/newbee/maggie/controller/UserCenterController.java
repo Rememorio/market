@@ -3,6 +3,9 @@ package com.newbee.maggie.controller;
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.service.UserCenterService;
 import com.newbee.maggie.util.*;
+import com.newbee.maggie.web.ResponseVO;
+import com.newbee.maggie.web.UserInfoVO;
+import com.newbee.maggie.web.WxLoginVO;
 import com.newbee.maggie.web.Year;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,145 +73,42 @@ public class UserCenterController {
         return map;
     }
 
-//    @RequestMapping("/get/openid")
-//    public @ResponseBody
-//    Map<String, Object> GetOpenid(String appid, String code, String secret) throws ParamNotFoundException{
-//        if (code == null || code.length() == 0) {
-//            throw new ParamNotFoundException("code不能为空");
-//        }
-//        return GetOpenIDUtil.oauth2GetOpenid(appid, code, secret);
-//    }
-
-//    /**
-//     * 根据code, appid, secret返回session_key等
-//     * @param codeMap
-//     * @return
-//     * @throws ParamNotFoundException
-//     * @throws RequestFailedException
-//     */
-//    @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
-//    private Map<String, Object> getUserInfo(@RequestBody Map<String, String> codeMap) throws ParamNotFoundException, RequestFailedException {
-//        String code = codeMap.get("code");
-//        String appid = codeMap.get("appid");
-//        String secret = codeMap.get("secret");
-//        //不用grant_type了
-//        if (code == null || code.length() == 0) {
-//            throw new ParamNotFoundException("code不能为空");
-//        }
-//        if (appid == null || appid.length() == 0) {
-//            throw new ParamNotFoundException("appid不能为空");
-//        }
-//        if (secret == null || secret.length() == 0) {
-//            throw new ParamNotFoundException("secret不能为空");
-//        }
-//        // 根据appid, secret, code获取openid参考这里
-//        // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
-//        Map<String, Object> openIdMap = GetOpenIDUtil.oauth2GetOpenid(appid, code, secret);
-//        String errCode = (String) openIdMap.get("errcode");
-//        String errMsg = (String) openIdMap.get("errmsg");
-//        if (errCode != "0") {//如果请求不成功
-//            throw new RequestFailedException(errMsg);
-//        }
-//        String openId = (String) openIdMap.get("openid");
-//        String sessionKey = (String) openIdMap.get("session_key");
-//        String unionId = (String) openIdMap.get("unionid");
-//
-//        // 根据appid, secret获取access_token参考这里
-//        // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
-//        Map<String, String> accessTokenMap = GetAccessTokenUtil.getAccessToken(appid, secret);//这里的函数是默认成功，因为成功失败返回不太一样
-//        String accessToken = accessTokenMap.get("access_token");
-//        if (accessToken == null || accessToken.length() == 0) {
-//            throw new RequestFailedException("accessToken获取失败");
-//        }
-//        //封装信息
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("openId", openId);
-//        map.put("sessionKey", sessionKey);
-//        map.put("unionId", unionId);
-//        map.put("accessToken", accessToken);
-//        map.put("errorCode", 0);
-//        return map;
-//    }
-
-//    /**
-//     * 根据openid, session_key和iv获取解密数据
-//     * @param dataMap
-//     * @return
-//     * @throws ParamNotFoundException
-//     */
-//    @RequestMapping(value = "/getData", method = RequestMethod.POST)
-//    private Map<String, Object> getDecryptedData(@RequestBody Map<String, String> dataMap) throws ParamNotFoundException {
-//        String openId = dataMap.get("openId");
-//        String sessionKey = dataMap.get("sessionKey");
-//        String encryptedData = dataMap.get("encryptedData");
-//        String iv = dataMap.get("iv");
-//        if (openId == null || openId.length() == 0) {
-//            throw new ParamNotFoundException("openId不能为空");
-//        }
-//        if (sessionKey == null || sessionKey.length() == 0) {
-//            throw new ParamNotFoundException("sessionKey不能为空");
-//        }
-//        if (encryptedData == null || encryptedData.length() == 0) {
-//            throw new ParamNotFoundException("encryptedData不能为空");
-//        }
-//        if (iv == null || iv.length() == 0) {
-//            throw new ParamNotFoundException("iv不能为空");
-//        }
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        //解密数据
-//        try {
-//            String result = AESUtil.decryptWXAppletInfo(sessionKey, encryptedData, iv);
-//            map.put("errorCode", 0);
-//            map.put("rawData", result);
-//            return map;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        //能运行到这里肯定有问题
-//        map.put("errorCode", 1);
-//        return map;
-//    }
-
-//    /**
-//     * 根据openid, session_key和用户信息插入新用户，并返回用户id
-//     * @param dataMap
-//     * @return
-//     * @throws ParamNotFoundException
-//     */
-//    @RequestMapping(value = "/getUserId", method = RequestMethod.POST)
-//    private Map<String, Object> getUserId(@RequestBody Map<String, String> dataMap) throws ParamNotFoundException {
-//        String openId = dataMap.get("openId");
-//        String sessionKey = dataMap.get("sessionKey");
-//        String encryptedData = dataMap.get("encryptedData");
-//        String iv = dataMap.get("iv");
-//        if (openId == null || openId.length() == 0) {
-//            throw new ParamNotFoundException("openId不能为空");
-//        }
-//        if (sessionKey == null || sessionKey.length() == 0) {
-//            throw new ParamNotFoundException("sessionKey不能为空");
-//        }
-//        if (encryptedData == null || encryptedData.length() == 0) {
-//            throw new ParamNotFoundException("encryptedData不能为空");
-//        }
-//        if (iv == null || iv.length() == 0) {
-//            throw new ParamNotFoundException("iv不能为空");
-//        }
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        //解密数据
-//        try {
-//            String result = AESUtil.decryptWXAppletInfo(sessionKey, encryptedData, iv);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        User user = new User(nickname, sessionKey, openId);
-//        Integer userId = userCenterService.addUser(user);//add函数成功则返回用户id
-//        //封装信息
-//        map.put("errorCode", 0);
-//        map.put("userId", userId);
-//        return map;
-//    }
+    /**
+     * 登录授权
+     * @param codeMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseVO<UserInfoVO> login(@RequestBody Map<String, String> codeMap) throws Exception {
+        logger.info("执行授权登录请求");
+        String encryptedData = codeMap.get("encryptedData");
+        if (encryptedData == null) {
+            throw new ParamNotFoundException("encryptedData参数为空");
+        }
+        String iv = codeMap.get("iv");
+        if (iv == null) {
+            throw new ParamNotFoundException("iv参数为空");
+        }
+        String rawData = codeMap.get("rawData");
+        if (rawData == null) {
+            throw new ParamNotFoundException("rawData参数为空");
+        }
+        String signature = codeMap.get("signature");
+        if (signature == null) {
+            throw new ParamNotFoundException("signature参数为空");
+        }
+        String code = codeMap.get("code");
+        if (code == null) {
+            throw new ParamNotFoundException("code参数为空");
+        }
+        logger.info("请求参数：" + codeMap);
+        WxLoginVO loginVO = new WxLoginVO(encryptedData, iv, rawData, signature, code);
+        ResponseVO<UserInfoVO> responseVO = userCenterService.login(loginVO);
+        logger.info("返回参数："  + responseVO);
+        UserInfoVO userInfoVO =  responseVO.getData();
+        return responseVO;
+    }
 
     /**
      * 根据用户id查询是否具有管理员权限

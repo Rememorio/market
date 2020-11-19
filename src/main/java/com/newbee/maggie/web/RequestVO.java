@@ -1,7 +1,7 @@
 package com.newbee.maggie.web;
 
 /**
- * 请求公共实体类
+ * Description: 请求公共实体类
  */
 public class RequestVO {
     private String token;

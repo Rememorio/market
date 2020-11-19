@@ -15,4 +15,9 @@
         user_info(user_id, openid, unionid, usertype, avatarurl, city, country, language, nickname, province)
         VALUES(#{userId}, #{openid}, #{unionid}, #{usertype}, #{avatarurl}, #{city}, #{country}, #{language}, #{nickname}, #{province})
     </insert>
+
+    <select id="getIdCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM user_info
+    </select>
 </mapper>
