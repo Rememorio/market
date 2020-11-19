@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newbee.maggie.mapper.UserInfoMapper">  <!--指定mapper对应的dao,这样mapper就会实现dao对应的方法-->
+    <select id="selectByOpenId" parameterType="java.lang.String" resultType="com.newbee.maggie.entity.UserInfo"><!--编写sql语句-->
+		SELECT user_id, openid, unionid, usertype, avatarurl, city, country, language, nickname, province
+		FROM user_info
+		WHERE openid = #{openId}
+	</select>
+
+    <insert id="insert" parameterType="com.newbee.maggie.entity.UserInfo"
+            keyProperty="openid" keyColumn="openid" useGeneratedKeys="false">
+        INSERT INTO
+        user_info(user_id, openid, unionid, usertype, avatarurl, city, country, language, nickname, province)
+        VALUES(#{userId}, #{openid}, #{unionid}, #{usertype}, #{avatarurl}, #{city}, #{country}, #{language}, #{nickname}, #{province})
+    </insert>
+</mapper>

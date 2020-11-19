@@ -1,6 +1,9 @@
 package com.newbee.maggie.service;
 
 import com.newbee.maggie.entity.*;
+import com.newbee.maggie.web.ResponseVO;
+import com.newbee.maggie.web.UserInfoVO;
+import com.newbee.maggie.web.WxLoginVO;
 
 import java.util.List;
 
@@ -74,4 +77,12 @@ public interface UserCenterService {
      * @return
      */
     public List<Reserve> getReserveByUserId(Integer userId);
+
+    /**
+     * 授权登录
+     * @param loginVO
+     * @return
+     * @throws Exception
+     */
+    public ResponseVO<UserInfoVO> login(WxLoginVO loginVO) throws Exception;
 }

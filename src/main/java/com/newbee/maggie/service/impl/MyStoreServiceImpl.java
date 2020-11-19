@@ -3,7 +3,6 @@ package com.newbee.maggie.service.impl;
 import com.newbee.maggie.entity.Commodities;
 import com.newbee.maggie.entity.Commodity;
 import com.newbee.maggie.mapper.CommodityMapper;
-import com.newbee.maggie.mapper.UserMapper;
 import com.newbee.maggie.service.MyStoreService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,9 @@ public class MyStoreServiceImpl implements MyStoreService {
     private Logger logger = Logger.getLogger(MyStoreService.class);
 
     // 外网地址
-    private static final String SERVERADDRESS = "http://maggiemarket.design:8081/picture/upload";
+    private static final String SERVER_ADDRESS = "http://maggiemarket.design:8081/picture/upload";
     // 本地地址
-    private static final String LOCALADDRESS = "C:/xampp/tomcat/webapps/picture/upload";
+    private static final String LOCAL_ADDRESS = "C:/xampp/tomcat/webapps/picture/upload";
 
     /**
      * 分割url
@@ -74,7 +73,7 @@ public class MyStoreServiceImpl implements MyStoreService {
         int successCount = 0;
         int failureCount = 0;
         for (String url: pictureUrls) {
-            String urlAddress = url.replaceFirst(SERVERADDRESS, LOCALADDRESS);
+            String urlAddress = url.replaceFirst(SERVER_ADDRESS, LOCAL_ADDRESS);
             System.out.println(urlAddress);
             File file = new File(urlAddress);
             // 判断文件是否存在

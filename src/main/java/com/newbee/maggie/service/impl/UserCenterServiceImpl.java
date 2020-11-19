@@ -1,8 +1,12 @@
 package com.newbee.maggie.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.mapper.*;
 import com.newbee.maggie.service.UserCenterService;
+import com.newbee.maggie.util.*;
+import com.newbee.maggie.web.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,9 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Autowired
     private ReserveMapper reserveMapper;
+
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
     @Override
     public User getUserByNickname(String nickname) {
@@ -128,5 +135,34 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public List<Reserve> getReserveByUserId(Integer userId) {
         return reserveMapper.getReserveByUserId(userId);
+    }
+
+    @Override
+    public ResponseVO<UserInfoVO> login(WxLoginVO loginVO) throws Exception {
+        String code2SessionUrl = WxUtils.getApi(WxConsts.API_SESSION_KEY, loginVO.getCode());
+        String result = HttpUtils.doGet(code2SessionUrl);
+        WxAuthVO wxAuthVO = JSONObject.parseObject(result, WxAuthVO.class);
+
+        if(!loginVO.getSignature().equals(WxUtils.getSignature(loginVO.getRawData(),wxAuthVO.getSessionKey()))){
+            return new ResponseVO<UserInfoVO>(MsgError.WX_SIGNATURE.code(), MsgError.WX_SIGNATURE.getErrorMsg(),null);
+        }
+
+        if (wxAuthVO.getOpenId() != null) {
+            UserInfo userinfo = null;
+            UserInfoVO respUserInfo = null;
+            userinfo = userInfoMapper.selectByOpenId(wxAuthVO.getOpenId());
+            if(userinfo == null){
+                WxUserInfoVO wxUserInfo = WxUtils.encryptedDataUserInfo(loginVO.getEncryptedData(), wxAuthVO.getSessionKey(), loginVO.getIv());
+                userinfo = JSON.parseObject(JSON.toJSONString(wxUserInfo),UserInfo.class);
+                userinfo.setUsertype("1");
+                userInfoMapper.insert(userinfo);
+            }
+            respUserInfo = JSON.parseObject(JSON.toJSONString(userinfo),UserInfoVO.class);
+            respUserInfo.setToken(TokenUtil.getToken(userinfo));
+
+            return new ResponseVO<UserInfoVO>(MsgSuccess.OK.code(), MsgSuccess.OK.getSuccesMsg(), respUserInfo);
+        }
+
+        return new ResponseVO<UserInfoVO>(MsgError.COMMON_EMPTY.code(), MsgError.COMMON_EMPTY.getErrorMsg(),null);
     }
 }

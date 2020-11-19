@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.ProtocolException;
 import java.text.SimpleDateFormat;
@@ -51,9 +50,9 @@ public class MyStoreController {
     }
 
     // 外网地址
-    private static final String SERVERADDRESS = "http://maggiemarket.design:8081/picture/upload";
+    private static final String SERVER_ADDRESS = "http://maggiemarket.design:8081/picture/upload";
     // 本地地址
-    private static final String LOCALADDRESS = "C:/xampp/tomcat/webapps/picture/upload";
+    private static final String LOCAL_ADDRESS = "C:/xampp/tomcat/webapps/picture/upload";
 
     /**
      * 上传文件
@@ -90,7 +89,7 @@ public class MyStoreController {
                 if ("GIF".equals(type.toUpperCase()) || "PNG".equals(type.toUpperCase()) || "JPG".equals(type.toUpperCase())) {
                     // 项目在容器中实际发布运行的根路径
                     //String realPath = request.getSession().getServletContext().getRealPath("/");
-                    String realPath = LOCALADDRESS;
+                    String realPath = LOCAL_ADDRESS;
                     // 自定义的文件名称
                     Date date = new Date();
                     SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddHHmmss");
@@ -103,7 +102,7 @@ public class MyStoreController {
                     logger.info("文件成功上传到指定目录下");
                     map.put("errorCode", 0);
                     // 生成服务器端的地址
-                    String address = SERVERADDRESS + "/" + trueFileName;
+                    String address = SERVER_ADDRESS + "/" + trueFileName;
                     map.put("url", address);
                     logger.info("返回信息：" + map);
                     return map;
@@ -139,7 +138,7 @@ public class MyStoreController {
         int successCount = 0;
         int failureCount = 0;
         for (String url : urlList) {
-            String urlAddress = url.replaceFirst(SERVERADDRESS, LOCALADDRESS);
+            String urlAddress = url.replaceFirst(SERVER_ADDRESS, LOCAL_ADDRESS);
             System.out.println(urlAddress);
             File file = new File(urlAddress);
             // 判断文件是否存在
