@@ -2,7 +2,6 @@ package com.newbee.maggie.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.newbee.maggie.controller.UserCenterController;
 import com.newbee.maggie.entity.*;
 import com.newbee.maggie.mapper.*;
 import com.newbee.maggie.service.UserCenterService;
@@ -148,19 +147,19 @@ public class UserCenterServiceImpl implements UserCenterService {
         WxAuthVO wxAuthVO = JSONObject.parseObject(result, WxAuthVO.class);
         logger.info("openid&sessionKey: " + wxAuthVO);
         //如果签名不一致
-        if(!loginVO.getSignature().equals(WxUtils.getSignature(loginVO.getRawData(),wxAuthVO.getSessionKey()))){
+        if(!loginVO.getSignature().equals(WxUtils.getSignature(loginVO.getRawData(),wxAuthVO.getSession_key()))){
             return new ResponseVO<UserInfoVO>(MsgError.WX_SIGNATURE.code(), MsgError.WX_SIGNATURE.getErrorMsg(),null);
         }
         //如果成功获取到openid
-        if (wxAuthVO.getOpenId() != null) {
-            logger.info("成功获取openId：" + wxAuthVO.getOpenId());
+        if (wxAuthVO.getOpenid() != null) {
+            logger.info("成功获取openId：" + wxAuthVO.getOpenid());
             UserInfo userinfo = null;
             UserInfoVO respUserInfo = null;
-            userinfo = userInfoMapper.selectByOpenId(wxAuthVO.getOpenId());
+            userinfo = userInfoMapper.selectByOpenId(wxAuthVO.getOpenid());
             //如果是新用户，那么就操作数据库
             if(userinfo == null){
                 logger.info("该用户为新用户，userInfo：" + userinfo);
-                WxUserInfoVO wxUserInfo = WxUtils.encryptedDataUserInfo(loginVO.getEncryptedData(), wxAuthVO.getSessionKey(), loginVO.getIv());
+                WxUserInfoVO wxUserInfo = WxUtils.encryptedDataUserInfo(loginVO.getEncryptedData(), wxAuthVO.getSession_key(), loginVO.getIv());
                 userinfo = JSON.parseObject(JSON.toJSONString(wxUserInfo),UserInfo.class);
                 //设置默认参数
                 Integer userId = userInfoMapper.getIdCount() + 1;

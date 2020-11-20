@@ -80,7 +80,7 @@ public class UserCenterController {
      * @throws Exception
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseVO<UserInfoVO> login(@RequestBody Map<String, String> codeMap) throws Exception {
+    public Map<String, Object> login(@RequestBody Map<String, String> codeMap) throws Exception {
         logger.info("执行授权登录请求");
         String encryptedData = codeMap.get("encryptedData");
         if (encryptedData == null) {
@@ -105,9 +105,26 @@ public class UserCenterController {
         logger.info("请求参数：" + codeMap);
         WxLoginVO loginVO = new WxLoginVO(encryptedData, iv, rawData, signature, code);
         ResponseVO<UserInfoVO> responseVO = userCenterService.login(loginVO);
-        logger.info("返回参数："  + responseVO);
+        logger.info("返回信息："  + responseVO);
         UserInfoVO userInfoVO =  responseVO.getData();
-        return responseVO;
+        Map<String, Object> map = new HashMap<String, Object>();
+        // 如果没有获取用户信息，就把错误码报上去
+        if (userInfoVO == null) {
+            map.put("errorCode", 1);
+            if (responseVO.getCode() == MsgError.COMMON_EMPTY.code()) {
+                map.put("errorMsg", MsgError.COMMON_EMPTY.getErrorMsg());
+            }
+            if (responseVO.getCode() == MsgError.WX_SIGNATURE.code()) {
+                map.put("errorMsg", MsgError.WX_SIGNATURE.getErrorMsg());
+            }
+            logger.info("授权失败："  + map);
+            return map;
+        }
+        // 如果获取用户信息，就返回用户id
+        map.put("errorCode", 0);
+        map.put("userId", userInfoVO.getUserId());
+        logger.info("授权成功："  + map);
+        return map;
     }
 
     /**
