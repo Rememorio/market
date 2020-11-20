@@ -34,7 +34,7 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Autowired
     private UserInfoMapper userInfoMapper;
 
-    private Logger logger = Logger.getLogger(UserCenterService.class);
+    private final Logger logger = Logger.getLogger(UserCenterService.class);
 
     @Override
     public User getUserByNickname(String nickname) {
@@ -174,8 +174,7 @@ public class UserCenterServiceImpl implements UserCenterService {
                 if (effectedNum > 0) {//如果插入成功
                     logger.info("插入user_info表成功，userId：" + userId);
                     //继续插入user表
-                    int effectedNumber = userMapper.insertUser(user);
-                    if (effectedNumber > 0) {
+                    if (addUser(user)) {
                         logger.info("插入user表失败，userId：" + userId);
                     } else {
                         logger.info("插入user表失败，userId：" + userId);
@@ -193,5 +192,74 @@ public class UserCenterServiceImpl implements UserCenterService {
         }
         //获取不到openid
         return new ResponseVO<UserInfoVO>(MsgError.COMMON_EMPTY.code(), MsgError.COMMON_EMPTY.getErrorMsg(),null);
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteReserve(Integer cmId) {
+        //先试图删除reserve中的元组
+        try {
+            int effectedNum = reserveMapper.deleteReserve(cmId);
+            if (effectedNum > 0) {
+                //更改商品状态为审核通过
+                try {
+                    int effectedNumber = commodityMapper.changeStateToApproved(cmId);
+                    if (effectedNumber > 0) {
+                        return true;
+                    } else {
+                        throw new RuntimeException("更改状态至审核通过失败");
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException("更改状态至审核通过失败：" + e.toString());
+                }
+            } else {
+                throw new RuntimeException("取消预定失败");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("取消预定失败:" + e.toString());
+        }
+    }
+
+    @Transactional
+    @Override
+    public Boolean addBuy(Buy buy) {
+        Commodity commodity = commodityMapper.getCommodityByCmId(buy.getCmId());
+        if (commodity == null) {
+            throw new RuntimeException("商品不存在，无法购买");
+        }
+        if (!(commodity.getState() == 2 || commodity.getState() == 4)) {
+            throw new RuntimeException("该商品状态不为审核通过或已预订，无法购买");
+        }
+        Reserve reserve = reserveMapper.getReserveByCmId(commodity.getCmId());
+        if (reserve.getUserId() != buy.getUserId()) {
+            throw new RuntimeException("该用户不是该商品的预订者，无法购买");
+        }
+        //先试图插入buy表
+        Integer orderId = reserveMapper.getReserveIdByCmId(buy.getCmId());
+        if (orderId == null) {
+            throw new RuntimeException("可能是该商品还没有被预定，无法购买");
+        }
+        buy.setOrderId(orderId);//设置orderId
+        try {
+            int effectedNum = buyMapper.insertBuy(buy);
+            if (effectedNum > 0) {
+                //更改商品状态为已售出
+                Integer cmId = buy.getCmId();
+                try {
+                    int effectedNumber = commodityMapper.changeStateToSold(cmId);
+                    if (effectedNumber > 0) {
+                        return true;
+                    } else {
+                        throw new RuntimeException("更改状态至已售出失败");
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException("更改状态至已售出失败：" + e.toString());
+                }
+            } else {
+                throw new RuntimeException("购买失败，可能是该商品已经被购买");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("购买失败，可能是该商品已经被购买:" + e.toString());
+        }
     }
 }

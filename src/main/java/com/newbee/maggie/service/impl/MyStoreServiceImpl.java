@@ -21,7 +21,7 @@ public class MyStoreServiceImpl implements MyStoreService {
     @Autowired
     private CommodityMapper commodityMapper;
 
-    private Logger logger = Logger.getLogger(MyStoreService.class);
+    private final Logger logger = Logger.getLogger(MyStoreService.class);
 
     // 外网地址
     private static final String SERVER_ADDRESS = "http://maggiemarket.design:8081/picture/upload";

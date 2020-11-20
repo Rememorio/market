@@ -22,14 +22,13 @@ public class MyStoreController {
     @Autowired
     private MyStoreService myStoreService;
 
-    private Logger logger = Logger.getLogger(MyStoreController.class);
+    private final Logger logger = Logger.getLogger(MyStoreController.class);
 
     /**
      * 根据userId获取这个用户出售的商品
-     *
-     * @param userIdMap
-     * @return
-     * @throws ParamNotFoundException
+     * @param userIdMap userId
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
      */
     @RequestMapping(value = "/getMyGoods", method = RequestMethod.POST)
     private Map<String, Object> myGoods(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException {
@@ -39,10 +38,9 @@ public class MyStoreController {
             throw new ParamNotFoundException("userId参数为空");
         }
         logger.info("userId = " + userId + "正在请求我的商店列表");
-        List<Commodities> cmsList = new ArrayList<Commodities>();
-        cmsList = myStoreService.getCmsListByUserId(userId);
+        List<Commodities> cmsList = myStoreService.getCmsListByUserId(userId);
         //封装信息
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("errorCode", 0);
         map.put("commodityList", cmsList);
         logger.info("返回信息：" + map);
@@ -56,13 +54,12 @@ public class MyStoreController {
 
     /**
      * 上传文件
-     *
-     * @param request
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws ParamNotFoundException
-     * @throws ParamIllegalException
+     * @param request 请求体
+     * @param file 图片文件
+     * @return map
+     * @throws IOException 读写异常
+     * @throws ParamNotFoundException 参数缺失
+     * @throws ParamIllegalException 参数不合法
      */
     @ResponseBody
     @RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
@@ -77,12 +74,13 @@ public class MyStoreController {
         if (file.isEmpty()) {
             throw new ProtocolException("img文件为空");
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (!file.isEmpty()) {
             logger.info("成功获取照片");
             String fileName = file.getOriginalFilename();
             String path = null;
             String type = null;
+            assert fileName != null;
             type = fileName.contains(".") ? fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()) : null;
             logger.info("图片初始名称为：" + fileName + " 类型为：" + type);
             if (type != null) {
@@ -94,7 +92,7 @@ public class MyStoreController {
                     Date date = new Date();
                     SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddHHmmss");
                     String uploadTime = ft.format(date);
-                    String trueFileName = "userId=" + userId + "_uploadTime=" + uploadTime + "_systemTime=" + String.valueOf(System.currentTimeMillis()) + "." + type;
+                    String trueFileName = "userId=" + userId + "_uploadTime=" + uploadTime + "_systemTime=" + System.currentTimeMillis() + "." + type;
                     // 设置存放图片文件的路径
                     path = realPath + "/" + trueFileName;
                     logger.info("存放图片文件的路径:" + path);
@@ -122,11 +120,10 @@ public class MyStoreController {
 
     /**
      * 删除文件
-     *
-     * @param urlMap
-     * @return
-     * @throws ParamNotFoundException
-     * @throws FileNotFoundException
+     * @param urlMap url数组
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
+     * @throws FileNotFoundException 文件缺失
      */
     @RequestMapping(value = "/deleteImgs", method = RequestMethod.POST)
     public Map<String, Object> deleteImgs(@RequestBody Map<String, Object> urlMap) throws ParamNotFoundException, FileNotFoundException {
@@ -154,7 +151,7 @@ public class MyStoreController {
                 throw new FileNotFoundException(url + "不存在");
             }
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("errorCode", 0);
         map.put("successCount", successCount);
         map.put("failureCount", failureCount);
@@ -164,10 +161,10 @@ public class MyStoreController {
 
     /**
      * 发布商品
-     * @param cmMap
-     * @return
-     * @throws ParamNotFoundException
-     * @throws ParamIllegalException
+     * @param cmMap 商品信息
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
+     * @throws ParamIllegalException 参数不合法
      */
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     public Map<String, Object> publishCommodity(@RequestBody Map<String, Object> cmMap) throws ParamNotFoundException, ParamIllegalException {
@@ -210,7 +207,7 @@ public class MyStoreController {
         }
         logger.info("userId = " + userId + "正在请求发布商品");
         Commodity commodity = new Commodity(name, classify, details, price, userId, address, pictureUrls, isNew);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (myStoreService.addCommodity(commodity)) {
             map.put("errorCode", 0);
             map.put("cmId", commodity.getCmId());
@@ -224,10 +221,10 @@ public class MyStoreController {
 
     /**
      * 修改商品
-     * @param cmMap
-     * @return
-     * @throws ParamNotFoundException
-     * @throws ParamIllegalException
+     * @param cmMap 商品信息
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
+     * @throws ParamIllegalException 参数不合法
      */
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public Map<String, Object> modifyCommodity(@RequestBody Map<String, Object> cmMap) throws ParamNotFoundException, ParamIllegalException {
@@ -274,7 +271,7 @@ public class MyStoreController {
         }
         logger.info("userId = " + userId + "正在请求修改商品");
         Commodity commodity = new Commodity(cmId, name, classify, details, price, userId, address, pictureUrls, isNew);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (myStoreService.updateCommodity(commodity)) {
             map.put("errorCode", 0);
             map.put("success", true);
@@ -288,10 +285,10 @@ public class MyStoreController {
 
     /**
      * 下架商品
-     * @param idMap
-     * @return
-     * @throws ParamNotFoundException
-     * @throws ParamIllegalException
+     * @param idMap cmId
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
+     * @throws ParamIllegalException 参数不合法
      */
     @RequestMapping(value = "/withdraw", method = RequestMethod.POST)
     public Map<String, Object> withdrawCommodity(@RequestBody Map<String, Object> idMap) throws ParamNotFoundException, ParamIllegalException {
@@ -311,7 +308,7 @@ public class MyStoreController {
             throw new ParamIllegalException("该用户不是这件商品的卖家，无权删除");
         }
         //删除商品
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (myStoreService.deleteCommodity(cmId)) {
             map.put("errorCode", 0);
             map.put("success", true);

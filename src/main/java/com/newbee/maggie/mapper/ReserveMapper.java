@@ -17,7 +17,7 @@ public interface ReserveMapper {
      * @param cmId
      * @return
      */
-    List<Reserve> getReserveByCmId(Integer cmId);
+    Reserve getReserveByCmId(Integer cmId);
 
     /**
      * 获取Reserve表元组数，方便生成reserveId

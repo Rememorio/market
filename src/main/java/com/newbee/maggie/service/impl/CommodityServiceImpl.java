@@ -84,6 +84,10 @@ public class CommodityServiceImpl implements CommodityService {
     @Transactional
     @Override
     public Boolean addReserve(Reserve reserve) {
+        Commodity commodity = commodityMapper.getCommodityByCmId(reserve.getCmId());
+        if (commodity.getState() != 2) {
+            throw new RuntimeException("该商品状态不为审核通过，无法预订");
+        }
         //先尝试插入reserve表
         Integer reserveId = reserveMapper.getIdCount() + 1;
         reserve.setReserveId(reserveId);//设置reserveId
@@ -139,6 +143,17 @@ public class CommodityServiceImpl implements CommodityService {
     @Transactional
     @Override
     public Boolean addBuy(Buy buy) {
+        Commodity commodity = commodityMapper.getCommodityByCmId(buy.getCmId());
+        if (commodity == null) {
+            throw new RuntimeException("商品不存在，无法购买");
+        }
+        if (!(commodity.getState() == 2 || commodity.getState() == 4)) {
+            throw new RuntimeException("该商品状态不为审核通过或已预订，无法购买");
+        }
+        Reserve reserve = reserveMapper.getReserveByCmId(commodity.getCmId());
+        if (reserve.getUserId() != buy.getUserId()) {
+            throw new RuntimeException("该用户不是该商品的预订者，无法购买");
+        }
         //先试图插入buy表
         Integer orderId = reserveMapper.getReserveIdByCmId(buy.getCmId());
         if (orderId == null) {

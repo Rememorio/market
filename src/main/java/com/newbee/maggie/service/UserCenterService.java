@@ -85,4 +85,18 @@ public interface UserCenterService {
      * @throws Exception
      */
     public ResponseVO<UserInfoVO> login(WxLoginVO loginVO) throws Exception;
+
+    /**
+     * 取消预定，删除reserve元组
+     * @param cmId
+     * @return
+     */
+    public Boolean deleteReserve(Integer cmId);
+
+    /**
+     * 购买成功，插入buy表
+     * @param buy
+     * @return
+     */
+    public Boolean addBuy(Buy buy);
 }

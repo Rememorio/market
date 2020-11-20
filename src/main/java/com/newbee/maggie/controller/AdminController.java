@@ -24,18 +24,17 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    private Logger logger = Logger.getLogger(AdminController.class);
+    private final Logger logger = Logger.getLogger(AdminController.class);
 
     /**
      * 获取被举报的商品
-     * @return
+     * @return map
      */
     @RequestMapping(value = "/accused", method = RequestMethod.GET)
     private Map<String, Object> reportedCommodity() {
         logger.info("执行请求被举报商品列表");
-        List<Commodities> cmsList = new ArrayList<Commodities>();
-        cmsList = adminService.getReportedCommodities();
-        Map<String, Object> map = new HashMap<String, Object>();
+        List<Commodities> cmsList = adminService.getReportedCommodities();
+        Map<String, Object> map = new HashMap<>();
         map.put("errorCode", 0);
         map.put("commodityList", cmsList);
         logger.info("返回信息：" + map);
@@ -44,14 +43,13 @@ public class AdminController {
 
     /**
      * 获取待审核的商品
-     * @return
+     * @return map
      */
     @RequestMapping(value = "/waiting", method = RequestMethod.GET)
     private Map<String, Object> waitingCommodity() {
         logger.info("执行请求待审核商品列表");
-        List<Commodities> cmsList = new ArrayList<Commodities>();
-        cmsList = adminService.getWaitingCommodities();
-        Map<String, Object> map = new HashMap<String, Object>();
+        List<Commodities> cmsList = adminService.getWaitingCommodities();
+        Map<String, Object> map = new HashMap<>();
         map.put("errorCode", 0);
         map.put("commodityList", cmsList);
         logger.info("返回信息：" + map);
@@ -60,9 +58,9 @@ public class AdminController {
 
     /**
      * 根据商品id返回商品信息
-     * @param cmIdMap
-     * @return
-     * @throws CommodityNotFoundException
+     * @param cmIdMap cmId
+     * @return map
+     * @throws CommodityNotFoundException 商品不存在
      */
     @RequestMapping(value = "/information", method = RequestMethod.POST)
     private Map<String, Object> commodityInfo(@RequestBody Map<String, Integer> cmIdMap) throws ParamNotFoundException, CommodityNotFoundException {
@@ -72,7 +70,7 @@ public class AdminController {
             throw new ParamNotFoundException("cmId参数为空");
         }
         logger.info("正在请求cmId = " + cmId + "的商品详情");
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         Commodity commodity = adminService.getCommodityByCmId(cmId);
         if (commodity == null) {
             throw new CommodityNotFoundException("商品不存在");
@@ -87,9 +85,9 @@ public class AdminController {
             String[] pictureUrls = pictureUrl.split(",");
             Commodities commodities = new Commodities(commodity, pictureUrls);
             map.put("commodityList", commodities);
-            List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();
+            List<HashMap<String, Object>> urlsMapList = new ArrayList<>();
             for (int i = 0; i < pictureUrls.length; i++) {//逐一添加url
-                HashMap<String, Object> urlsMap = new HashMap<String, Object>();
+                HashMap<String, Object> urlsMap = new HashMap<>();
                 urlsMap.put("urlId", i);
                 urlsMap.put("urlSrc", pictureUrls[i]);
                 urlsMapList.add(urlsMap);
@@ -99,8 +97,8 @@ public class AdminController {
             String[] pictureUrls = new String[]{pictureUrl};
             Commodities commodities = new Commodities(commodity, pictureUrls);
             map.put("commodityInfo", commodities);
-            List<HashMap<String, Object>> urlsMapList = new ArrayList<HashMap<String, Object>>();
-            HashMap<String, Object> urlsMap = new HashMap<String, Object>();
+            List<HashMap<String, Object>> urlsMapList = new ArrayList<>();
+            HashMap<String, Object> urlsMap = new HashMap<>();
             urlsMap.put("urlId", 0);//这里添加一个url就可以了
             urlsMap.put("urlSrc", pictureUrls[0]);
             urlsMapList.add(urlsMap);
@@ -112,9 +110,10 @@ public class AdminController {
 
     /**
      * 审核商品，2-通过，3-不通过
-     * @param idMap
-     * @return
-     * @throws ParamNotFoundException
+     * @param idMap cmId, toState
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
+     * @throws ParamIllegalException 参数不合法
      */
     @RequestMapping(value = "/changeState", method = RequestMethod.POST)
     private Map<String, Object> changeState(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException, ParamIllegalException {
@@ -128,7 +127,7 @@ public class AdminController {
             throw new ParamNotFoundException("toState参数为空");
         }
         logger.info("正在请求将cmId = " + cmId + "的状态改为" + toState);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         //尝试更改状态
         if (toState == 2) {//审核通过
             if (adminService.changeState(cmId, 2) == 2) {
