@@ -123,6 +123,21 @@ public class UserCenterServiceImpl implements UserCenterService {
     }
 
     @Override
+    public Commodities getCommoditiesByCmId(Integer cmId) {
+        Commodity commodity = commodityMapper.getCommodityByCmId(cmId);
+        Commodities commodities;
+        String pictureUrl = commodity.getPictureUrl();
+        if (pictureUrl.contains(",")) {//如果有","，即不止一个url
+            String[] pictureUrls = pictureUrl.split(",");
+            commodities = new Commodities(commodity, pictureUrls);
+        } else {//没有","，即只有一个url
+            String[] pictureUrls = new String[]{pictureUrl};
+            commodities = new Commodities(commodity, pictureUrls);
+        }
+        return commodities;
+    }
+
+    @Override
     public List<Buy> getBuyByUserId(Integer userId) {
         return buyMapper.getBuyByUserId(userId);
     }
@@ -136,6 +151,8 @@ public class UserCenterServiceImpl implements UserCenterService {
     public List<Reserve> getReserveByUserId(Integer userId) {
         return reserveMapper.getReserveByUserId(userId);
     }
+
+
 
     @Override
     public ResponseVO<UserInfoVO> login(WxLoginVO loginVO) throws Exception {
@@ -175,12 +192,12 @@ public class UserCenterServiceImpl implements UserCenterService {
                     logger.info("插入user_info表成功，userId：" + userId);
                     //继续插入user表
                     if (addUser(user)) {
-                        logger.info("插入user表失败，userId：" + userId);
+                        logger.info("插入user表成功，userId：" + userId);
                     } else {
                         logger.info("插入user表失败，userId：" + userId);
                     }
                 } else {
-                    logger.info("插入user_info表成功，userId：" + userId);
+                    logger.info("插入user_info表失败，userId：" + userId);
                 }
             } else {
                 logger.info("该用户不是新用户，userInfo：" + userinfo);

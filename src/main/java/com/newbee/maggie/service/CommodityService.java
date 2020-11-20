@@ -25,6 +25,14 @@ public interface CommodityService {
     public String getContactInfoByUserId(Integer userId);
 
     /**
+     * 查看用户是否收藏
+     * @param userId
+     * @param cmId
+     * @return
+     */
+    public boolean getIsCollected(Integer userId, Integer cmId);
+
+    /**
      * 收藏商品
      * @param collect
      * @return

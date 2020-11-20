@@ -50,6 +50,16 @@ public class CommodityServiceImpl implements CommodityService {
         return userMapper.getContactInfoByUserId(userId);
     }
 
+    @Override
+    public boolean getIsCollected(Integer userId, Integer cmId) {
+        Collect collect = new Collect(userId, cmId);
+        Collect collectTarget = collectMapper.getCollectByUserIdAndCmId(collect);
+        if (collectTarget == null) {
+            return false;
+        }
+        return true;
+    }
+
     @Transactional  //加上事务控制  当抛出RuntimeException异常  事务就会回滚
     @Override
     public Boolean addCollection(Collect collect) {

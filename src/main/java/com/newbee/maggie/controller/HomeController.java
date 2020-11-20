@@ -108,14 +108,14 @@ public class HomeController {
                 throw new ParamIllegalException("sortType参数不合法");
             }
             map.put("errorCode", 0);
-            map.put("CommodityList", commoditiesList);
+            map.put("commodityList", commoditiesList);
             logger.info("返回信息：" + map);
             return map;
         } else if (searchType == 1) {//用户
             logger.info("搜索了用户，关键词为：" + searchInput);
             List<User> userList = homeService.searchUser(searchInput);
             map.put("errorCode", 0);
-            map.put("UserList", userList);
+            map.put("userList", userList);
             logger.info("返回信息：" + map);
             return map;
         } else {

@@ -15,8 +15,6 @@ public class User {
         this.nickname = nickname;
         this.grade = 2018;
         this.authority = 0;
-        this.defaultShippingAddress = "请输入收货地址";
-        this.contactInformation = "请输入联系方式";
     }
 
     //用户id

@@ -9,6 +9,12 @@
 		WHERE user_id = #{userId}
 	</select>
 
+	<select id="getCollectByUserIdAndCmId" resultType="com.newbee.maggie.entity.Collect">
+		SELECT user_id, cm_id
+		FROM collection
+		WHERE user_id = #{userId} and cm_id = #{cmId}
+	</select>
+
 	<insert id="insertCollect" parameterType="com.newbee.maggie.entity.Collect"
 			keyProperty="user_id, cm_id" keyColumn="user_id, cm_id" useGeneratedKeys="false">
 		INSERT INTO

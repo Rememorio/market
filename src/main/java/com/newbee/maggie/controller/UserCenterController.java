@@ -288,16 +288,72 @@ public class UserCenterController {
         for(Buy buy: buyList) {//对于这个List<buy>里面的每个buy
             //以下为商品部分
             Integer cmId = buy.getCmId();//获取这个buy的商品id
-            Commodity commodity = userCenterService.getCommodityByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodity == null) {//应该不会没有的叭，不过写上好过没写
+            Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
+            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
                 throw new CommodityNotFoundException("商品不存在");
             }
+            commoditiesList.add(commodities);
             //以下为订单id和交易时间部分
             HashMap<String, Object> orderMap = new HashMap<>();
             orderMap.put("cmId", buy.getCmId());
             orderMap.put("orderId", buy.getOrderId());
             orderMap.put("timeOfTransaction", buy.getTimeOfTransaction());
             orderMapList.add(orderMap);
+        }
+        //封装信息
+        Map<String, Object> map = new HashMap<>();
+        map.put("commodityList", commoditiesList);
+        map.put("orderList", orderMapList);
+        map.put("errorCode", 0);
+        logger.info("返回信息：" + map);
+        return map;
+    }
+
+    /**
+     * 根据用户id查询用户已买到的，并进行筛选
+     * @param userIdMap userId, search
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
+     * @throws UserNotFoundException 用户不存在
+     * @throws CommodityNotFoundException 商品不存在
+     */
+    @RequestMapping(value = "/userBoughts/search", method = RequestMethod.POST)
+    private Map<String, Object> userBoughtsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+        logger.info("执行请求搜索我买到的商品列表");
+        Integer userId = (Integer) userIdMap.get("userId");//获取用户id
+        if (userId == null) {//如果没有userId信息
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        String search = (String) userIdMap.get("search");
+        if (search == null) {
+            throw new ParamNotFoundException("search参数为空");
+        }
+        logger.info("userId = " + userId + "正在请求搜索我买到的商品列表，关键词为：" + search);
+        //查找用户
+        User user = userCenterService.getUserByUserId(userId);
+        if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
+            throw new UserNotFoundException("用户不存在");
+        }
+        List<Buy> buyList = userCenterService.getBuyByUserId(userId);//获取这个用户的buy列表
+        List<Commodities> commoditiesList= new ArrayList<>();//存储商品信息的List
+        List<HashMap<String, Object>> orderMapList = new ArrayList<>();//存储商品交易订单id和交易时间的List
+        for(Buy buy: buyList) {//对于这个List<buy>里面的每个buy
+            //以下为商品部分
+            Integer cmId = buy.getCmId();//获取这个buy的商品id
+            Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
+            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
+                throw new CommodityNotFoundException("商品不存在");
+            }
+            String name = commodities.getName();
+            if (name.contains(search)) {
+                commoditiesList.add(commodities);
+                //以下为订单id和交易时间部分
+                HashMap<String, Object> orderMap = new HashMap<>();
+                orderMap.put("cmId", buy.getCmId());
+                orderMap.put("orderId", buy.getOrderId());
+                orderMap.put("timeOfTransaction", buy.getTimeOfTransaction());
+                orderMapList.add(orderMap);
+            }
         }
         //封装信息
         Map<String, Object> map = new HashMap<>();
@@ -333,10 +389,58 @@ public class UserCenterController {
         List<Commodities> commoditiesList= new ArrayList<>();//存储商品信息的List
         for (Collect collect: collectList) {//对于这个List<Collect>的每个collect
             //以下为商品部分
-            Integer cmId = collect.getCmId();//获取这个buy的商品id
-            Commodity commodity = userCenterService.getCommodityByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodity == null) {//应该不会没有的叭，不过写上好过没写
+            Integer cmId = collect.getCmId();//获取这个collect的商品id
+            Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
+            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
                 throw new CommodityNotFoundException("商品不存在");
+            }
+            commoditiesList.add(commodities);
+        }
+        //封装信息
+        Map<String, Object> map = new HashMap<>();
+        map.put("commodityList", commoditiesList);
+        map.put("errorCode", 0);
+        logger.info("返回信息：" + map);
+        return map;
+    }
+
+    /**
+     * 根据用户id查找用户收藏，并进行筛选
+     * @param userIdMap userId, search
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
+     * @throws UserNotFoundException 用户不存在
+     * @throws CommodityNotFoundException 商品不存在
+     */
+    @RequestMapping(value = "/userFavors/search", method = RequestMethod.POST)
+    private Map<String, Object> userFavorsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+        logger.info("执行请求搜索我的收藏商品列表");
+        Integer userId = (Integer) userIdMap.get("userId");//获取用户id
+        if (userId == null) {//如果没有userId信息
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        String search = (String) userIdMap.get("search");
+        if (search == null) {
+            throw new ParamNotFoundException("search参数为空");
+        }
+        logger.info("userId = " + userId + "正在请求搜索我的收藏商品列表，关键词为：" + search);
+        //查找用户
+        User user = userCenterService.getUserByUserId(userId);
+        if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
+            throw new UserNotFoundException("用户不存在");
+        }
+        List<Collect> collectList = userCenterService.getCollectByUserId(userId);//获取这个用户的收藏列表
+        List<Commodities> commoditiesList= new ArrayList<>();//存储商品信息的List
+        for (Collect collect: collectList) {//对于这个List<Collect>的每个collect
+            //以下为商品部分
+            Integer cmId = collect.getCmId();//获取这个collect的商品id
+            Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
+            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
+                throw new CommodityNotFoundException("商品不存在");
+            }
+            String name = commodities.getName();
+            if (name.contains(search)) {
+                commoditiesList.add(commodities);
             }
         }
         //封装信息
@@ -374,16 +478,72 @@ public class UserCenterController {
         for (Reserve reserve: reserveList) {//对于这个List<Reserve>的每个reserve
             //以下为商品部分
             Integer cmId = reserve.getCmId();//获取这个buy的商品id
-            Commodity commodity = userCenterService.getCommodityByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodity == null) {//应该不会没有的叭，不过写上好过没写
+            Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
+            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
                 throw new CommodityNotFoundException("商品不存在");
             }
+            commoditiesList.add(commodities);
             //以下为预定订单id和预定时间部分
             HashMap<String, Object> reserveMap = new HashMap<>();
             reserveMap.put("cmId", reserve.getCmId());
             reserveMap.put("reserveId", reserve.getReserveId());
             reserveMap.put("reserveTime", reserve.getReserveTime());
             reserveMapList.add(reserveMap);
+        }
+        //封装信息
+        Map<String, Object> map = new HashMap<>();
+        map.put("commodityList", commoditiesList);
+        map.put("reserveList", reserveMapList);
+        map.put("errorCode", 0);
+        logger.info("返回信息：" + map);
+        return map;
+    }
+
+    /**
+     * 根据用户id查找用户预订
+     * @param userIdMap userId, search
+     * @return map
+     * @throws ParamNotFoundException 参数缺失
+     * @throws UserNotFoundException 用户不存在
+     * @throws CommodityNotFoundException 商品不存在
+     */
+    @RequestMapping(value = "/userBookings/search", method = RequestMethod.POST)
+    private Map<String, Object> userBookingsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+        logger.info("执行请求我预订的商品列表");
+        Integer userId = (Integer) userIdMap.get("userId");//获取用户id
+        if (userId == null) {//如果没有userId信息
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        String search = (String) userIdMap.get("search");
+        if (search == null) {
+            throw new ParamNotFoundException("search参数为空");
+        }
+        logger.info("userId = " + userId + "正在请求搜索我预订的商品列表，关键词为：" + search);
+        //查找用户
+        User user = userCenterService.getUserByUserId(userId);
+        if (user == null) {//如果没有这个用户，就抛出用户不存在的异常
+            throw new UserNotFoundException("用户不存在");
+        }
+        List<Reserve> reserveList = userCenterService.getReserveByUserId(userId);//获取这个用户的预定列表
+        List<Commodities> commoditiesList= new ArrayList<>();//存储商品信息的List
+        List<HashMap<String, Object>> reserveMapList = new ArrayList<>();//存储商品预定订单id和预定时间的List
+        for (Reserve reserve: reserveList) {//对于这个List<Reserve>的每个reserve
+            //以下为商品部分
+            Integer cmId = reserve.getCmId();//获取这个buy的商品id
+            Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
+            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
+                throw new CommodityNotFoundException("商品不存在");
+            }
+            String name = commodities.getName();
+            if (name.contains(search)) {
+                commoditiesList.add(commodities);
+                //以下为预定订单id和预定时间部分
+                HashMap<String, Object> reserveMap = new HashMap<>();
+                reserveMap.put("cmId", reserve.getCmId());
+                reserveMap.put("reserveId", reserve.getReserveId());
+                reserveMap.put("reserveTime", reserve.getReserveTime());
+                reserveMapList.add(reserveMap);
+            }
         }
         //封装信息
         Map<String, Object> map = new HashMap<>();

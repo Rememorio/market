@@ -23,19 +23,23 @@ public class CommodityController {
 
     /**
      * 根据商品id返回商品信息
-     * @param cmIdMap cmId
+     * @param idMap cmId
      * @return map
      * @throws ParamNotFoundException 参数缺失
      * @throws CommodityNotFoundException 商品不存在
      */
     @RequestMapping(value = "/information", method = RequestMethod.POST)
-    private Map<String, Object> commodityInfo(@RequestBody Map<String, Integer> cmIdMap) throws ParamNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> commodityInfo(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException, CommodityNotFoundException {
         logger.info("执行请求商品详情");
-        Integer cmId = cmIdMap.get("cmId");
+        Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
         }
-        logger.info("正在请求cmId = " + cmId + "的商品详情");
+        Integer userIdReq = idMap.get("userId");
+        if (userIdReq == null) {
+            throw new ParamNotFoundException("userId参数为空");
+        }
+        logger.info("userId = " + userIdReq + "正在请求cmId = " + cmId + "的商品详情");
         Map<String, Object> map = new HashMap<>();
         Commodity commodity = commodityService.getCommodityByCmId(cmId);
         if (commodity == null) {
@@ -43,7 +47,9 @@ public class CommodityController {
         }
         Integer userId = commodity.getUserId();
         String contactInfo = commodityService.getContactInfoByUserId(userId);
+        boolean collected = commodityService.getIsCollected(userIdReq, cmId);
         map.put("contactInfo", contactInfo);
+        map.put("collected", collected);
         map.put("errorCode", 0);
         //处理图片url，以","作为分隔符
         String pictureUrl = commodity.getPictureUrl();

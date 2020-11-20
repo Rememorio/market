@@ -58,6 +58,13 @@ public interface UserCenterService {
     public Commodity getCommodityByCmId(Integer cmId);
 
     /**
+     * 通过id查找商品，并把url进行分割
+     * @param cmId
+     * @return
+     */
+    public Commodities getCommoditiesByCmId(Integer cmId);
+
+    /**
      * 通过用户id查找已购列表
      * @param userId
      * @return
