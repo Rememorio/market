@@ -31,6 +31,24 @@
 		FROM commodity
 	</select>
 
+	<select id="getHigherEducationMegaCenterCmList" resultType="com.newbee.maggie.entity.Commodity">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		WHERE address = 1
+	</select>
+
+	<select id="getWuShanCmList" resultType="com.newbee.maggie.entity.Commodity">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		WHERE address = 2
+	</select>
+
+	<select id="getInternationalCmList" resultType="com.newbee.maggie.entity.Commodity">
+		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
+		FROM commodity
+		WHERE address = 3
+	</select>
+
 	<select id="getApprovedCmList" resultType="com.newbee.maggie.entity.Commodity">
 		SELECT cm_id, name, classify, details, price, user_id, address, picture_url, launch_time, is_new, state
 		FROM commodity

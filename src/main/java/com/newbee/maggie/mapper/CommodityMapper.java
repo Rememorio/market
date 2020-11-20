@@ -35,6 +35,24 @@ public interface CommodityMapper {
     List<Commodity> getCmList();
 
     /**
+     * 返回大学城的商品
+     * @return
+     */
+    List<Commodity> getHigherEducationMegaCenterCmList();
+
+    /**
+     * 返回五山的商品
+     * @return
+     */
+    List<Commodity> getWuShanCmList();
+
+    /**
+     * 返回国际校区的商品
+     * @return
+     */
+    List<Commodity> getInternationalCmList();
+
+    /**
      * 返回通过的商品数
      * @return
      */

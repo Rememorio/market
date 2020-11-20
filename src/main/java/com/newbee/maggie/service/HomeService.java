@@ -55,6 +55,20 @@ public interface HomeService {
     public List<Commodities> searchCommoditiesPriceUp(String searchInput);
 
     /**
+     * 搜索商品，价格降序
+     * @param searchInput
+     * @return
+     */
+    public List<Commodity> searchCommodityPriceDown(String searchInput);
+
+    /**
+     * 搜索商品，价格降序，并把url进行分割
+     * @param searchInput
+     * @return
+     */
+    public List<Commodities> searchCommoditiesPriceDown(String searchInput);
+
+    /**
      * 搜索商品，时间最新
      * @param searchInput
      * @return
@@ -67,4 +81,18 @@ public interface HomeService {
      * @return
      */
     public List<Commodities> searchCommoditiesTimeNew(String searchInput);
+
+    /**
+     * 搜索商品，时间最久
+     * @param searchInput
+     * @return
+     */
+    public List<Commodity> searchCommodityTimeOld(String searchInput);
+
+    /**
+     * 搜索商品，时间最久，并把url进行分割
+     * @param searchInput
+     * @return
+     */
+    public List<Commodities> searchCommoditiesTimeOld(String searchInput);
 }

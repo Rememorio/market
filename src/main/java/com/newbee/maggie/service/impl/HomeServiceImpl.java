@@ -43,6 +43,36 @@ public class HomeServiceImpl implements HomeService {
         return commoditiesList;
     }
 
+    /**
+     * 如果关键词里面有地址，那么把这部分的也加上
+     * 这个算法有问题，如果我搜【课本 大学城】，会返回所有课本和所有大学城的商品
+     * 再说吧，看什么时候改了
+     * @param originList
+     * @param searchInput
+     * @return
+     */
+    private List<Commodity> addAdress(List<Commodity> originList, String searchInput) {
+        List<Commodity> commodityList = new ArrayList<>();
+        if (searchInput.contains("大学城")) {
+            List<Commodity> hemc = commodityMapper.getHigherEducationMegaCenterCmList();
+            commodityList.removeAll(hemc);//去重
+            commodityList.addAll(hemc);//再合并
+        }
+        if (searchInput.contains("五山")) {
+            List<Commodity> ws = commodityMapper.getWuShanCmList();
+            commodityList.removeAll(ws);
+            commodityList.addAll(ws);
+        }
+        if (searchInput.contains("国际")) {
+            List<Commodity> ic = commodityMapper.getInternationalCmList();
+            commodityList.removeAll(ic);
+            commodityList.addAll(ic);
+        }
+        originList.removeAll(commodityList);
+        originList.addAll(commodityList);
+        return originList;
+    }
+
     @Override
     public List<Commodity> getRecommendedCommodity() {
         Integer cmCount = commodityMapper.getApprovedCmCount();
@@ -84,39 +114,60 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public List<Commodity> searchCommodity(String searchInput) {
         String keyword = "%" + searchInput + "%";
-        return commodityMapper.getCmListBySearching(keyword);
+        return addAdress(commodityMapper.getCmListBySearching(keyword), searchInput);
     }
 
     @Override
     public List<Commodities> searchCommodities(String searchInput) {
-        String keyword = "%" + searchInput + "%";
-        List<Commodity> commodityList = searchCommodity(keyword);//直接套用上面的函数
+        List<Commodity> commodityList = searchCommodity(searchInput);//直接套用上面的函数
         return splitUrl(commodityList);
     }
 
     @Override
     public List<Commodity> searchCommodityPriceUp(String searchInput) {
         String keyword = "%" + searchInput + "%";
-        return commodityMapper.getCmListBySearchingPriceUp(keyword);
+        return addAdress(commodityMapper.getCmListBySearchingPriceUp(keyword), searchInput);
     }
 
     @Override
     public List<Commodities> searchCommoditiesPriceUp(String searchInput) {
+        List<Commodity> commodityList = searchCommodityPriceUp(searchInput);
+        return splitUrl(commodityList);
+    }
+
+    @Override
+    public List<Commodity> searchCommodityPriceDown(String searchInput) {
         String keyword = "%" + searchInput + "%";
-        List<Commodity> commodityList = searchCommodityPriceUp(keyword);
+        return addAdress(commodityMapper.getCmListBySearchingPriceDown(keyword), searchInput);
+    }
+
+    @Override
+    public List<Commodities> searchCommoditiesPriceDown(String searchInput) {
+        List<Commodity> commodityList = searchCommodityPriceDown(searchInput);
         return splitUrl(commodityList);
     }
 
     @Override
     public List<Commodity> searchCommodityTimeNew(String searchInput) {
         String keyword = "%" + searchInput + "%";
-        return commodityMapper.getCmListBySearchingTimeNew(keyword);
+        return addAdress(commodityMapper.getCmListBySearchingTimeNew(keyword), searchInput);
     }
 
     @Override
     public List<Commodities> searchCommoditiesTimeNew(String searchInput) {
+        List<Commodity> commodityList = searchCommodityTimeNew(searchInput);
+        return splitUrl(commodityList);
+    }
+
+    @Override
+    public List<Commodity> searchCommodityTimeOld(String searchInput) {
         String keyword = "%" + searchInput + "%";
-        List<Commodity> commodityList = searchCommodityTimeNew(keyword);
+        return addAdress(commodityMapper.getCmListBySearchingTimeOld(keyword), searchInput);
+    }
+
+    @Override
+    public List<Commodities> searchCommoditiesTimeOld(String searchInput) {
+        List<Commodity> commodityList = searchCommodityTimeOld(searchInput);
         return splitUrl(commodityList);
     }
 

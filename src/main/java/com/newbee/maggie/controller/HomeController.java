@@ -98,6 +98,12 @@ public class HomeController {
             } else if (sortType == 1) {
                 logger.info("搜索了商品，时间最新，关键词为：" + searchInput);
                 commoditiesList = homeService.searchCommoditiesTimeNew(searchInput);
+            } else if (sortType == 2) {
+                logger.info("搜索了商品，价格降序，关键词为：" + searchInput);
+                commoditiesList = homeService.searchCommoditiesPriceDown(searchInput);
+            } else if (sortType == 3) {
+                logger.info("搜索了商品，时间最久，关键词为：" + searchInput);
+                commoditiesList = homeService.searchCommoditiesTimeOld(searchInput);
             } else {
                 throw new ParamIllegalException("sortType参数不合法");
             }
