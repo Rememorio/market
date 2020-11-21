@@ -258,9 +258,14 @@ public class UserCenterServiceImpl implements UserCenterService {
         Integer cmId = buy.getCmId();
         Integer orderId = reserveMapper.getReserveIdByCmId(cmId);
         if (orderId == null) {
-            throw new RuntimeException("可能是该商品还没有被预定，无法购买");
+            throw new RuntimeException("可能是该商品还没有被预订，无法购买");
+        }
+        String timeOfReserve = reserveMapper.getReserveTimeByCmId(cmId);
+        if (timeOfReserve == null) {
+            throw new RuntimeException("该商品没有预订时间信息，无法购买");
         }
         buy.setOrderId(orderId);//设置orderId
+        buy.setTimeOfReserve(timeOfReserve);//设置预订时间
         try {
             int effectedNum = buyMapper.insertBuy(buy);
             if (effectedNum > 0) {

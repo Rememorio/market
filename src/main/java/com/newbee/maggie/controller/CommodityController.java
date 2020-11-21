@@ -242,6 +242,7 @@ public class CommodityController {
             map.put("success", true);
             map.put("orderId", buy.getOrderId());
             map.put("timeOfTransaction", buy.getTimeOfTransaction());
+            map.put("timeOfReserve", buy.getTimeOfReserve());
             logger.info("返回信息：" + map);
             logger.info("————————————————————");
             return map;

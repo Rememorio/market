@@ -31,6 +31,12 @@
 		WHERE cm_id = #{cmId}
 	</select>
 
+	<select id="getReserveTimeByCmId" resultType="java.lang.String" parameterType="java.lang.Integer">
+		SELECT reserve_time
+		FROM reserve
+		WHERE cm_id = #{cmId}
+	</select>
+
 	<insert id="insertReserve" parameterType="com.newbee.maggie.entity.Reserve"
 			keyProperty="cm_id" keyColumn="cm_id" useGeneratedKeys="false">
 		INSERT INTO

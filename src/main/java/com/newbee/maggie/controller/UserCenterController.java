@@ -298,16 +298,12 @@ public class UserCenterController {
                 throw new CommodityNotFoundException("商品不存在");
             }
             commoditiesList.add(commodities);
-            Reserve reserve = userCenterService.getReserveByCmId(buy.getCmId());
-            if (reserve == null) {
-                throw new CommodityNotFoundException("预定信息不存在");
-            }
             //以下为订单id和交易时间部分
             HashMap<String, Object> orderMap = new HashMap<>();
             orderMap.put("cmId", buy.getCmId());
             orderMap.put("orderId", buy.getOrderId());
             orderMap.put("timeOfTransaction", buy.getTimeOfTransaction());
-            orderMap.put("timeOfReserve", reserve.getReserveTime());
+            orderMap.put("timeOfReserve", buy.getTimeOfReserve());
             orderMapList.add(orderMap);
         }
         //封装信息
@@ -358,16 +354,12 @@ public class UserCenterController {
             String name = commodities.getName();
             if (name.contains(search)) {
                 commoditiesList.add(commodities);
-                Reserve reserve = userCenterService.getReserveByCmId(buy.getCmId());
-                if (reserve == null) {
-                    throw new CommodityNotFoundException("预定信息不存在");
-                }
                 //以下为订单id和交易时间部分
                 HashMap<String, Object> orderMap = new HashMap<>();
                 orderMap.put("cmId", buy.getCmId());
                 orderMap.put("orderId", buy.getOrderId());
                 orderMap.put("timeOfTransaction", buy.getTimeOfTransaction());
-                orderMap.put("timeOfReserve", reserve.getReserveTime());
+                orderMap.put("timeOfReserve", buy.getTimeOfReserve());
                 orderMapList.add(orderMap);
             }
         }
@@ -596,7 +588,6 @@ public class UserCenterController {
         Buy buy = new Buy(cmId, userId);
         Map<String, Object> map = new HashMap<>();
         if (userCenterService.addBuy(buy)) {
-
             map.put("errorCode", 0);
             map.put("success", true);
             map.put("orderId", buy.getOrderId());

@@ -86,7 +86,7 @@ public class MyStoreServiceImpl implements MyStoreService {
                     failureCount++;
                 }
             } else {
-                logger.info("删除" + url + "时图片不存在");
+                logger.info("删除" + urlAddress + "时图片不存在");
             }
         }
         map.put("successCount", successCount);

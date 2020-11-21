@@ -39,6 +39,13 @@ public interface ReserveMapper {
     Integer getReserveIdByCmId(Integer cmId);
 
     /**
+     * 获取cmId对应的reservTime，方便生成
+     * @param cmId
+     * @return
+     */
+    String getReserveTimeByCmId(Integer cmId);
+
+    /**
      * 插入预订
      * @param reserve
      * @return

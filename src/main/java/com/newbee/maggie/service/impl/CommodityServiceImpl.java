@@ -171,16 +171,21 @@ public class CommodityServiceImpl implements CommodityService {
             throw new RuntimeException("该用户不是该商品的预订者，无法购买");
         }
         //先试图插入buy表
-        Integer orderId = reserveMapper.getReserveIdByCmId(buy.getCmId());
+        Integer cmId = buy.getCmId();
+        Integer orderId = reserveMapper.getReserveIdByCmId(cmId);
         if (orderId == null) {
             throw new RuntimeException("可能是该商品还没有被预定，无法购买");
         }
+        String timeOfReserve = reserveMapper.getReserveTimeByCmId(cmId);
+        if (timeOfReserve == null) {
+            throw new RuntimeException("该商品没有预订时间信息，无法购买");
+        }
         buy.setOrderId(orderId);//设置orderId
+        buy.setTimeOfReserve(timeOfReserve);//设置预订时间
         try {
             int effectedNum = buyMapper.insertBuy(buy);
             if (effectedNum > 0) {
                 //更改商品状态为已售出
-                Integer cmId = buy.getCmId();
                 try {
                     int effectedNumber = commodityMapper.changeStateToSold(cmId);
                     if (effectedNumber > 0) {

@@ -10,13 +10,16 @@ public class Buy {
     private Integer userId;
     //订单id
     private Integer orderId;
+    //预定时间
+    private String timeOfReserve;
     //交易时间
     private String timeOfTransaction;
 
-    public Buy(Integer cmId, Integer userId, Integer orderId, String timeOfTransaction) {
+    public Buy(Integer cmId, Integer userId, Integer orderId, String timeOfReserve, String timeOfTransaction) {
         this.cmId = cmId;
         this.userId = userId;
         this.orderId = orderId;
+        this.timeOfReserve = timeOfReserve;
         this.timeOfTransaction = timeOfTransaction;
     }
 
@@ -59,6 +62,14 @@ public class Buy {
 
     public void setTimeOfTransaction(String timeOfTransaction) {
         this.timeOfTransaction = timeOfTransaction;
+    }
+
+    public String getTimeOfReserve() {
+        return timeOfReserve;
+    }
+
+    public void setTimeOfReserve(String timeOfReserve) {
+        this.timeOfReserve = timeOfReserve;
     }
 
     @Override
