@@ -20,6 +20,11 @@
 		FROM reserve
 	</select>
 
+	<select id="getMaxId" parameterType="java.lang.Integer">
+		SELECT max(reserve_id)
+		FROM reserve
+	</select>
+
 	<select id="getReserveIdByCmId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
 		SELECT reserve_id
 		FROM reserve

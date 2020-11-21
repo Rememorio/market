@@ -86,6 +86,13 @@ public interface UserCenterService {
     public List<Reserve> getReserveByUserId(Integer userId);
 
     /**
+     * 根据商品id查找预定信息
+     * @param cmId
+     * @return
+     */
+    public Reserve getReserveByCmId(Integer cmId);
+
+    /**
      * 授权登录
      * @param loginVO
      * @return

@@ -29,6 +29,12 @@ public interface CommodityMapper {
     Integer getCmCount();
 
     /**
+     * 获取最大id
+     * @return
+     */
+    Integer getMaxId();
+
+    /**
      * 返回数据库内所有商品
      * @return
      */

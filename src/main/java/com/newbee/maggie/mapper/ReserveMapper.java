@@ -26,6 +26,12 @@ public interface ReserveMapper {
     Integer getIdCount();
 
     /**
+     * 获取最大id
+     * @return
+     */
+    Integer getMaxId();
+
+    /**
      * 获取cmId对应的reserveId，方便生成订单编号
      * @param cmId
      * @return

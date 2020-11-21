@@ -24,9 +24,9 @@ public class MyStoreServiceImpl implements MyStoreService {
     private final Logger logger = Logger.getLogger(MyStoreService.class);
 
     // 外网地址
-    private static final String SERVER_ADDRESS = "http://maggiemarket.design:8081/picture/upload";
+    private static final String SERVER_ADDRESS = "http://maggiemarket.design:8081";
     // 本地地址
-    private static final String LOCAL_ADDRESS = "C:/xampp/tomcat/webapps/picture/upload";
+    private static final String LOCAL_ADDRESS = "C:/xampp/tomcat/webapps";
 
     /**
      * 分割url
@@ -86,7 +86,7 @@ public class MyStoreServiceImpl implements MyStoreService {
                     failureCount++;
                 }
             } else {
-                throw new FileNotFoundException(url + "不存在");
+                logger.info("删除" + url + "时图片不存在");
             }
         }
         map.put("successCount", successCount);
@@ -115,7 +115,13 @@ public class MyStoreServiceImpl implements MyStoreService {
     @Override
     public Boolean addCommodity(Commodity commodity) {
         //先尝试插入commodity表
-        Integer cmId = commodityMapper.getCmCount() + 1;
+        Integer count = commodityMapper.getCmCount();
+        Integer cmId = new Integer(0);
+        if (count == 0) {
+            cmId = 1;
+        } else {
+            cmId = commodityMapper.getMaxId() + 1;
+        }
         commodity.setCmId(cmId);//设置cmId
         System.out.println("commodity: " + commodity);
         try {

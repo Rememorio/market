@@ -99,7 +99,13 @@ public class CommodityServiceImpl implements CommodityService {
             throw new RuntimeException("该商品状态不为审核通过，无法预订");
         }
         //先尝试插入reserve表
-        Integer reserveId = reserveMapper.getIdCount() + 1;
+        Integer count = reserveMapper.getIdCount();
+        Integer reserveId = new Integer(0);
+        if (count == 0) {
+            reserveId = 1;
+        } else {
+            reserveId = reserveMapper.getMaxId() + 1;
+        }
         reserve.setReserveId(reserveId);//设置reserveId
         try {
             int effectedNum = reserveMapper.insertReserve(reserve);
@@ -161,7 +167,7 @@ public class CommodityServiceImpl implements CommodityService {
             throw new RuntimeException("该商品状态不为审核通过或已预订，无法购买");
         }
         Reserve reserve = reserveMapper.getReserveByCmId(commodity.getCmId());
-        if (reserve.getUserId() != buy.getUserId()) {
+        if (!reserve.getUserId().equals(buy.getUserId())) {
             throw new RuntimeException("该用户不是该商品的预订者，无法购买");
         }
         //先试图插入buy表
@@ -178,7 +184,17 @@ public class CommodityServiceImpl implements CommodityService {
                 try {
                     int effectedNumber = commodityMapper.changeStateToSold(cmId);
                     if (effectedNumber > 0) {
-                        return true;
+                        //最后删除reserve中的元组
+                        try {
+                            int effectedNumbers = reserveMapper.deleteReserve(cmId);
+                            if (effectedNumbers > 0) {
+                                return true;
+                            } else {
+                                throw new RuntimeException("删除预定失败");
+                            }
+                        } catch (Exception e) {
+                            throw new RuntimeException("删除预定失败:" + e.toString());
+                        }
                     } else {
                         throw new RuntimeException("更改状态至已售出失败");
                     }

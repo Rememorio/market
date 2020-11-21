@@ -26,6 +26,12 @@ public interface BuyMapper {
     Integer getIdCount();
 
     /**
+     * 获取最大id
+     * @return
+     */
+    Integer getMaxId();
+
+    /**
      * 插入订单信息
      * @param buy
      * @return

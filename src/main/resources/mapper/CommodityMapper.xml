@@ -20,6 +20,11 @@
 		FROM commodity
 	</select>
 
+	<select id="getMaxId" resultType="java.lang.Integer">
+		SELECT max(cm_id)
+		FROM commodity
+	</select>
+
 	<select id="getApprovedCmCount" resultType="java.lang.Integer">
 		SELECT count(*)
 		FROM commodity

@@ -152,7 +152,10 @@ public class UserCenterServiceImpl implements UserCenterService {
         return reserveMapper.getReserveByUserId(userId);
     }
 
-
+    @Override
+    public Reserve getReserveByCmId(Integer cmId) {
+        return reserveMapper.getReserveByCmId(cmId);
+    }
 
     @Override
     public ResponseVO<UserInfoVO> login(WxLoginVO loginVO) throws Exception {
@@ -248,11 +251,12 @@ public class UserCenterServiceImpl implements UserCenterService {
             throw new RuntimeException("该商品状态不为审核通过或已预订，无法购买");
         }
         Reserve reserve = reserveMapper.getReserveByCmId(commodity.getCmId());
-        if (reserve.getUserId() != buy.getUserId()) {
+        if (!reserve.getUserId().equals(buy.getUserId())) {
             throw new RuntimeException("该用户不是该商品的预订者，无法购买");
         }
         //先试图插入buy表
-        Integer orderId = reserveMapper.getReserveIdByCmId(buy.getCmId());
+        Integer cmId = buy.getCmId();
+        Integer orderId = reserveMapper.getReserveIdByCmId(cmId);
         if (orderId == null) {
             throw new RuntimeException("可能是该商品还没有被预定，无法购买");
         }
@@ -261,11 +265,20 @@ public class UserCenterServiceImpl implements UserCenterService {
             int effectedNum = buyMapper.insertBuy(buy);
             if (effectedNum > 0) {
                 //更改商品状态为已售出
-                Integer cmId = buy.getCmId();
                 try {
                     int effectedNumber = commodityMapper.changeStateToSold(cmId);
                     if (effectedNumber > 0) {
-                        return true;
+                        //最后删除reserve中的元组
+                        try {
+                            int effectedNumbers = reserveMapper.deleteReserve(cmId);
+                            if (effectedNumbers > 0) {
+                                return true;
+                            } else {
+                                throw new RuntimeException("删除预定失败");
+                            }
+                        } catch (Exception e) {
+                            throw new RuntimeException("删除预定失败:" + e.toString());
+                        }
                     } else {
                         throw new RuntimeException("更改状态至已售出失败");
                     }
