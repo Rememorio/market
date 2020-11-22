@@ -81,7 +81,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(@RequestBody Map<String, String> codeMap) throws Exception {
-        logger.info("——————————执行授权登录请求——————————");
+        logger.info("==========执行授权登录请求==========");
+        logger.info("请求体为：" + codeMap);
         String encryptedData = codeMap.get("encryptedData");
         if (encryptedData == null) {
             throw new ParamNotFoundException("encryptedData参数为空");
@@ -137,7 +138,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/getIsAdmin", method = RequestMethod.POST)
     private Map<String, Object> getIsAdmin(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException {
-        logger.info("——————————执行请求根据用户id查看管理员权限——————————");
+        logger.info("==========执行请求根据用户id查看管理员权限==========");
+        logger.info("请求体为：" + userIdMap);
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
@@ -163,7 +165,7 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userInfo/gradeArray", method = RequestMethod.GET)
     private Map<String, Object> gradeArray() {
-        logger.info("——————————执行请求年级数组——————————");
+        logger.info("==========执行请求年级数组==========");
         Year year = new Year();
         //封装信息
         Map<String, Object> map = new HashMap<>();
@@ -190,7 +192,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userInfo/userInfo", method = RequestMethod.POST)
     private Map<String, Object> userInfo(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException {
-        logger.info("——————————执行请求待修改的用户信息——————————");
+        logger.info("==========执行请求待修改的用户信息==========");
+        logger.info("请求体为：" + userIdMap);
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
@@ -226,7 +229,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userInfo/infoUpdate", method = RequestMethod.POST)
     private Map<String, Object> userInfoUpdated(@RequestBody Map<String, Object> userInfoMap) throws ParamNotFoundException, UserNotFoundException {
-        logger.info("——————————执行请求修改联系方式、收货地址和年级——————————");
+        logger.info("==========执行请求修改联系方式、收货地址和年级==========");
+        logger.info("请求体为：" + userInfoMap);
         Integer userId = (Integer) userInfoMap.get("userId");
         Integer gradeIndex = (Integer) userInfoMap.get("gradeIndex");
         String contactInfo = (String) userInfoMap.get("contactInfo");
@@ -276,7 +280,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userBoughts", method = RequestMethod.POST)
     private Map<String, Object> userBoughts(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
-        logger.info("——————————执行请求我买到的商品列表——————————");
+        logger.info("==========执行请求我买到的商品列表==========");
+        logger.info("请求体为：" + userIdMap);
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
@@ -326,7 +331,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userBoughts/search", method = RequestMethod.POST)
     private Map<String, Object> userBoughtsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
-        logger.info("——————————执行请求搜索我买到的商品列表——————————");
+        logger.info("==========执行请求搜索我买到的商品列表==========");
+        logger.info("请求体为：" + userIdMap);
         Integer userId = (Integer) userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
@@ -383,8 +389,9 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userFavors", method = RequestMethod.POST)
     private Map<String, Object> userFavors(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
-        logger.info("——————————执行请求我的收藏商品列表——————————");
+        logger.info("==========执行请求我的收藏商品列表==========");
         Integer userId = userIdMap.get("userId");//获取用户id
+        logger.info("请求体为：" + userIdMap);
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
         }
@@ -424,7 +431,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userFavors/search", method = RequestMethod.POST)
     private Map<String, Object> userFavorsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
-        logger.info("——————————执行请求搜索我的收藏商品列表——————————");
+        logger.info("==========执行请求搜索我的收藏商品列表==========");
+        logger.info("请求体为：" + userIdMap);
         Integer userId = (Integer) userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
@@ -472,7 +480,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userBookings", method = RequestMethod.POST)
     private Map<String, Object> userBookings(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
-        logger.info("——————————执行请求我预订的商品列表——————————");
+        logger.info("==========执行请求我预订的商品列表==========");
+        logger.info("请求体为：" + userIdMap);
         Integer userId = userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
@@ -521,7 +530,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userBookings/search", method = RequestMethod.POST)
     private Map<String, Object> userBookingsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
-        logger.info("——————————执行请求我预订的商品列表——————————");
+        logger.info("==========执行请求我预订的商品列表==========");
+        logger.info("请求体为：" + userIdMap);
         Integer userId = (Integer) userIdMap.get("userId");//获取用户id
         if (userId == null) {//如果没有userId信息
             throw new ParamNotFoundException("userId参数为空");
@@ -575,7 +585,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userBookings/payment", method = RequestMethod.POST)
     private Map<String, Object> payment(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行请求付款——————————");
+        logger.info("==========执行请求付款==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -609,7 +620,8 @@ public class UserCenterController {
      */
     @RequestMapping(value = "/userBookings/cancelOrder", method = RequestMethod.POST)
     private Map<String, Object> cancelOrder(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行请求取消订单——————————");
+        logger.info("==========执行请求取消订单==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");

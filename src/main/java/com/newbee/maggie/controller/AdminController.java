@@ -32,7 +32,7 @@ public class AdminController {
      */
     @RequestMapping(value = "/accused", method = RequestMethod.GET)
     private Map<String, Object> reportedCommodity() {
-        logger.info("——————————执行请求被举报商品列表——————————");
+        logger.info("==========执行请求被举报商品列表==========");
         List<Commodities> cmsList = adminService.getReportedCommodities();
         Map<String, Object> map = new HashMap<>();
         map.put("errorCode", 0);
@@ -48,7 +48,7 @@ public class AdminController {
      */
     @RequestMapping(value = "/waiting", method = RequestMethod.GET)
     private Map<String, Object> waitingCommodity() {
-        logger.info("——————————执行请求待审核商品列表——————————");
+        logger.info("==========执行请求待审核商品列表==========");
         List<Commodities> cmsList = adminService.getWaitingCommodities();
         Map<String, Object> map = new HashMap<>();
         map.put("errorCode", 0);
@@ -66,7 +66,8 @@ public class AdminController {
      */
     @RequestMapping(value = "/information", method = RequestMethod.POST)
     private Map<String, Object> commodityInfo(@RequestBody Map<String, Integer> cmIdMap) throws ParamNotFoundException, CommodityNotFoundException {
-        logger.info("——————————执行请求商品详情——————————");
+        logger.info("==========执行请求商品详情==========");
+        logger.info("请求体为：" + cmIdMap);
         Integer cmId = cmIdMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
@@ -120,7 +121,8 @@ public class AdminController {
      */
     @RequestMapping(value = "/changeState", method = RequestMethod.POST)
     private Map<String, Object> changeState(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException, ParamIllegalException {
-        logger.info("——————————执行审核商品请求——————————");
+        logger.info("==========执行审核商品请求==========");
+        logger.info("请求体为：" + idMap);
         Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");

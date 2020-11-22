@@ -30,7 +30,7 @@ public class HomeController {
      */
     @RequestMapping(value = "/recommend", method = RequestMethod.GET)
     private Map<String, Object> recommendation() {
-        logger.info("——————————执行请求推荐商品列表——————————");
+        logger.info("==========执行请求推荐商品列表==========");
         List<Commodities> cmsList = homeService.getRecommendedCommodities();
         Map<String, Object> map = new HashMap<>();
         map.put("errorCode", 0);
@@ -49,7 +49,8 @@ public class HomeController {
      */
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     private Map<String, Object> search(@RequestBody Map<String, Object> searchMap) throws ParamNotFoundException, ParamIllegalException {
-        logger.info("——————————执行请求搜索用户或商品——————————");
+        logger.info("==========执行请求搜索用户或商品==========");
+        logger.info("请求体为：" + searchMap);
         String searchInput = (String) searchMap.get("searchInput");
         if (searchInput == null) {
             throw new ParamNotFoundException("searchInput参数为空");

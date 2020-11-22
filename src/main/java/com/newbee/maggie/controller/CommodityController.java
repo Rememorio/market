@@ -30,7 +30,8 @@ public class CommodityController {
      */
     @RequestMapping(value = "/information", method = RequestMethod.POST)
     private Map<String, Object> commodityInfo(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException, CommodityNotFoundException {
-        logger.info("——————————执行请求商品详情——————————");
+        logger.info("==========执行请求商品详情==========");
+        logger.info("请求体为：" + idMap);
         Integer cmId = idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
@@ -96,7 +97,8 @@ public class CommodityController {
      */
     @RequestMapping(value = "/collection", method = RequestMethod.POST)
     private Map<String, Object> commodityCollection(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行收藏请求——————————");
+        logger.info("==========执行收藏请求==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -128,7 +130,8 @@ public class CommodityController {
      */
     @RequestMapping(value = "/collectionCancel", method = RequestMethod.POST)
     private Map<String, Object> commodityCollectionCancel(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行取消收藏请求——————————");
+        logger.info("==========执行取消收藏请求==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -153,14 +156,15 @@ public class CommodityController {
     }
 
     /**
-     * 用户收藏商品
+     * 用户预定商品
      * @param idMap cmId, userId
      * @return map
      * @throws ParamNotFoundException 参数缺失
      */
     @RequestMapping(value = "/reserve", method = RequestMethod.POST)
     private Map<String, Object> commodityReserve(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行预订请求——————————");
+        logger.info("==========执行预订请求==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -194,7 +198,8 @@ public class CommodityController {
      */
     @RequestMapping(value = "/reserveCancel", method = RequestMethod.POST)
     private Map<String, Object> commodityReserveCancel(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行取消预订请求——————————");
+        logger.info("==========执行取消预订请求==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -225,7 +230,8 @@ public class CommodityController {
      */
     @RequestMapping(value = "/buy", method = RequestMethod.POST)
     private Map<String, Object> commodityBuy(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行购买请求——————————");
+        logger.info("==========执行购买请求==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -260,7 +266,8 @@ public class CommodityController {
      */
     @RequestMapping(value = "/buyDelete", method = RequestMethod.POST)
     private Map<String, Object> commodityBuyDelete(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行删除购买请求——————————");
+        logger.info("==========执行删除购买请求==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -291,7 +298,8 @@ public class CommodityController {
      */
     @RequestMapping(value = "/accuse", method = RequestMethod.POST)
     private Map<String, Object> commodityReport(@RequestBody Map<String, Integer> idMap) throws ParamNotFoundException {
-        logger.info("——————————执行举报请求——————————");
+        logger.info("==========执行举报请求==========");
+        logger.info("请求体为：" + idMap);
         Integer userId = idMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");

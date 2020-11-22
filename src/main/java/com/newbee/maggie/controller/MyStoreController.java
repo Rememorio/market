@@ -32,7 +32,8 @@ public class MyStoreController {
      */
     @RequestMapping(value = "/getMyGoods", method = RequestMethod.POST)
     private Map<String, Object> myGoods(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException {
-        logger.info("——————————执行请求我的商店列表——————————");
+        logger.info("==========执行请求我的商店列表==========");
+        logger.info("请求体为：" + userIdMap);
         Integer userId = userIdMap.get("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -66,7 +67,8 @@ public class MyStoreController {
     @RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
     public Map<String, Object> uploadImg(HttpServletRequest request, @RequestParam(value = "img", required = false) MultipartFile file) throws IOException, ParamNotFoundException, ParamIllegalException {
         request.setCharacterEncoding("UTF-8");
-        logger.info("——————————执行请求图片上传——————————");
+        logger.info("==========执行请求图片上传==========");
+        logger.info("请求体为：" + request);
         String userId = request.getParameter("userId");
         if (userId == null) {
             throw new ParamNotFoundException("userId参数为空");
@@ -128,7 +130,8 @@ public class MyStoreController {
      */
     @RequestMapping(value = "/deleteImgs", method = RequestMethod.POST)
     public Map<String, Object> deleteImgs(@RequestBody Map<String, Object> urlMap) throws ParamNotFoundException  {
-        logger.info("执行图片删除");
+        logger.info("==========执行请求图片删除==========");
+        logger.info("请求体为：" + urlMap);
         List<String> urlList = (List<String>) urlMap.get("url");
         if (urlList == null) {
             throw new ParamNotFoundException("url数组为空");
@@ -170,7 +173,8 @@ public class MyStoreController {
      */
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     public Map<String, Object> publishCommodity(@RequestBody Map<String, Object> cmMap) throws ParamNotFoundException, ParamIllegalException {
-        logger.info("——————————执行请求发布商品——————————");
+        logger.info("==========执行请求发布商品==========");
+        logger.info("请求体为：" + cmMap);
         String name = (String) cmMap.get("name");
         if (name == null) {
             throw new ParamNotFoundException("name参数为空");
@@ -199,7 +203,7 @@ public class MyStoreController {
         if (address == null) {
             throw new ParamNotFoundException("address参数为空");
         }
-        List<String> pictureUrls = (List<String>) cmMap.get("pictureUrls");
+        List<String> pictureUrls = (ArrayList<String>) cmMap.get("pictureUrls");
         if (pictureUrls == null) {
             throw new ParamNotFoundException("pictureUrls参数为空");
         }
@@ -231,7 +235,8 @@ public class MyStoreController {
      */
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public Map<String, Object> modifyCommodity(@RequestBody Map<String, Object> cmMap) throws ParamNotFoundException, ParamIllegalException {
-        logger.info("——————————执行请求修改商品——————————");
+        logger.info("==========执行请求修改商品==========");
+        logger.info("请求体为：" + cmMap);
         Integer cmId = (Integer) cmMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");
@@ -296,7 +301,8 @@ public class MyStoreController {
      */
     @RequestMapping(value = "/withdraw", method = RequestMethod.POST)
     public Map<String, Object> withdrawCommodity(@RequestBody Map<String, Object> idMap) throws ParamNotFoundException, ParamIllegalException {
-        logger.info("——————————执行下架商品请求——————————");
+        logger.info("==========执行下架商品请求==========");
+        logger.info("请求体为：" + idMap);
         Integer cmId = (Integer) idMap.get("cmId");
         if (cmId == null) {
             throw new ParamNotFoundException("cmId参数为空");

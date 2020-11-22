@@ -45,7 +45,7 @@ public class DataSourceConfiguration {
 
         // 配置c3p0连接池的私有属性
         // 连接池最大线程数
-        dataSource.setMaxPoolSize(30);
+        dataSource.setMaxPoolSize(100);
         // 连接池最小线程数
         dataSource.setMinPoolSize(10);
         // 关闭连接后不自动commit
@@ -54,6 +54,8 @@ public class DataSourceConfiguration {
         dataSource.setCheckoutTimeout(10000);
         // 连接失败重试次数
         dataSource.setAcquireRetryAttempts(2);
+        // 数据库超时时间8小时（28800s），这里隔28000s检查一次连接
+        dataSource.setIdleConnectionTestPeriod(28000);
         return dataSource;
     }
 }
