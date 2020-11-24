@@ -49,4 +49,10 @@
 		reserve
 		WHERE cm_id = #{cmId}
 	</delete>
+
+	<update id="updateReserve" parameterType="java.lang.Integer">
+		UPDATE reserve
+		SET user_id = null
+		WHERE cm_id = #{cmId}
+	</update>
 </mapper>

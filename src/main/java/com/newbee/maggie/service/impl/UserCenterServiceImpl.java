@@ -125,14 +125,17 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public Commodities getCommoditiesByCmId(Integer cmId) {
         Commodity commodity = commodityMapper.getCommodityByCmId(cmId);
-        Commodities commodities;
-        String pictureUrl = commodity.getPictureUrl();
-        if (pictureUrl.contains(",")) {//如果有","，即不止一个url
-            String[] pictureUrls = pictureUrl.split(",");
-            commodities = new Commodities(commodity, pictureUrls);
-        } else {//没有","，即只有一个url
-            String[] pictureUrls = new String[]{pictureUrl};
-            commodities = new Commodities(commodity, pictureUrls);
+        Commodities commodities = null;
+        if (commodity != null) {
+            String pictureUrl = commodity.getPictureUrl();
+            System.out.println(pictureUrl);
+            if (pictureUrl.contains(",")) {//如果有","，即不止一个url
+                String[] pictureUrls = pictureUrl.split(",");
+                commodities = new Commodities(commodity, pictureUrls);
+            } else {//没有","，即只有一个url
+                String[] pictureUrls = new String[]{pictureUrl};
+                commodities = new Commodities(commodity, pictureUrls);
+            }
         }
         return commodities;
     }
@@ -273,9 +276,9 @@ public class UserCenterServiceImpl implements UserCenterService {
                 try {
                     int effectedNumber = commodityMapper.changeStateToSold(cmId);
                     if (effectedNumber > 0) {
-                        //最后删除reserve中的元组
+                        //最后更新reserve中的元组
                         try {
-                            int effectedNumbers = reserveMapper.deleteReserve(cmId);
+                            int effectedNumbers = reserveMapper.updateReserve(cmId);
                             if (effectedNumbers > 0) {
                                 return true;
                             } else {

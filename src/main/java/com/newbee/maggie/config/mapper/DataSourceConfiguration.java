@@ -54,8 +54,8 @@ public class DataSourceConfiguration {
         dataSource.setCheckoutTimeout(10000);
         // 连接失败重试次数
         dataSource.setAcquireRetryAttempts(2);
-        // 数据库超时时间8小时（28800s），这里隔28000s检查一次连接
-        dataSource.setIdleConnectionTestPeriod(28000);
+        // 数据库超时时间8小时（28800s），这里隔28780s检查一次连接
+        dataSource.setIdleConnectionTestPeriod(28780);
         return dataSource;
     }
 }

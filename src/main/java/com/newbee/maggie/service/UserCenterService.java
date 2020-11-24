@@ -1,6 +1,7 @@
 package com.newbee.maggie.service;
 
 import com.newbee.maggie.entity.*;
+import com.newbee.maggie.util.CommodityNotFoundException;
 import com.newbee.maggie.web.ResponseVO;
 import com.newbee.maggie.web.UserInfoVO;
 import com.newbee.maggie.web.WxLoginVO;

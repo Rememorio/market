@@ -58,4 +58,11 @@ public interface ReserveMapper {
      * @return
      */
     int deleteReserve(Integer cmId);
+
+    /**
+     * 把userId置null，从而实现删除预订
+     * @param cmId
+     * @return
+     */
+    int updateReserve(Integer cmId);
 }
