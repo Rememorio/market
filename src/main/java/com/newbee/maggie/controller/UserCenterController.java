@@ -276,10 +276,9 @@ public class UserCenterController {
      * @param userIdMap userId
      * @return map
      * @throws ParamNotFoundException 参数缺失
-     * @throws CommodityNotFoundException 商品不存在
      */
     @RequestMapping(value = "/userBoughts", method = RequestMethod.POST)
-    private Map<String, Object> userBoughts(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userBoughts(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException {
         logger.info("==========执行请求我买到的商品列表==========");
         logger.info("请求体为：" + userIdMap);
         Integer userId = userIdMap.get("userId");//获取用户id
@@ -299,8 +298,8 @@ public class UserCenterController {
             //以下为商品部分
             Integer cmId = buy.getCmId();//获取这个buy的商品id
             Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
-                throw new CommodityNotFoundException("商品不存在");
+            if (commodities == null) {//如果商品信息不存在就跳过
+                continue;
             }
             commoditiesList.add(commodities);
             //以下为订单id和交易时间部分
@@ -327,10 +326,9 @@ public class UserCenterController {
      * @return map
      * @throws ParamNotFoundException 参数缺失
      * @throws UserNotFoundException 用户不存在
-     * @throws CommodityNotFoundException 商品不存在
      */
     @RequestMapping(value = "/userBoughts/search", method = RequestMethod.POST)
-    private Map<String, Object> userBoughtsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userBoughtsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException {
         logger.info("==========执行请求搜索我买到的商品列表==========");
         logger.info("请求体为：" + userIdMap);
         Integer userId = (Integer) userIdMap.get("userId");//获取用户id
@@ -354,8 +352,8 @@ public class UserCenterController {
             //以下为商品部分
             Integer cmId = buy.getCmId();//获取这个buy的商品id
             Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
-                throw new CommodityNotFoundException("商品不存在");
+            if (commodities == null) {//如果商品信息不存在就跳过
+                continue;
             }
             String name = commodities.getName();
             if (name.contains(search)) {
@@ -385,10 +383,9 @@ public class UserCenterController {
      * @return map
      * @throws ParamNotFoundException 参数缺失
      * @throws UserNotFoundException 用户不存在
-     * @throws CommodityNotFoundException 商品不存在
      */
     @RequestMapping(value = "/userFavors", method = RequestMethod.POST)
-    private Map<String, Object> userFavors(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userFavors(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException {
         logger.info("==========执行请求我的收藏商品列表==========");
         Integer userId = userIdMap.get("userId");//获取用户id
         logger.info("请求体为：" + userIdMap);
@@ -407,8 +404,8 @@ public class UserCenterController {
             //以下为商品部分
             Integer cmId = collect.getCmId();//获取这个collect的商品id
             Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
-                throw new CommodityNotFoundException("商品不存在");
+            if (commodities == null) {//如果商品信息不存在就跳过
+                continue;
             }
             commoditiesList.add(commodities);
         }
@@ -427,10 +424,9 @@ public class UserCenterController {
      * @return map
      * @throws ParamNotFoundException 参数缺失
      * @throws UserNotFoundException 用户不存在
-     * @throws CommodityNotFoundException 商品不存在
      */
     @RequestMapping(value = "/userFavors/search", method = RequestMethod.POST)
-    private Map<String, Object> userFavorsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userFavorsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException {
         logger.info("==========执行请求搜索我的收藏商品列表==========");
         logger.info("请求体为：" + userIdMap);
         Integer userId = (Integer) userIdMap.get("userId");//获取用户id
@@ -453,8 +449,8 @@ public class UserCenterController {
             //以下为商品部分
             Integer cmId = collect.getCmId();//获取这个collect的商品id
             Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
-                throw new CommodityNotFoundException("商品不存在");
+            if (commodities == null) {//如果商品信息不存在就跳过
+                continue;
             }
             String name = commodities.getName();
             if (name.contains(search)) {
@@ -476,10 +472,9 @@ public class UserCenterController {
      * @return map
      * @throws ParamNotFoundException 参数缺失
      * @throws UserNotFoundException 用户不存在
-     * @throws CommodityNotFoundException 商品不存在
      */
     @RequestMapping(value = "/userBookings", method = RequestMethod.POST)
-    private Map<String, Object> userBookings(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userBookings(@RequestBody Map<String, Integer> userIdMap) throws ParamNotFoundException, UserNotFoundException {
         logger.info("==========执行请求我预订的商品列表==========");
         logger.info("请求体为：" + userIdMap);
         Integer userId = userIdMap.get("userId");//获取用户id
@@ -499,8 +494,8 @@ public class UserCenterController {
             //以下为商品部分
             Integer cmId = reserve.getCmId();//获取这个buy的商品id
             Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
-                throw new CommodityNotFoundException("商品不存在");
+            if (commodities == null) {//如果商品信息不存在就跳过
+                continue;
             }
             commoditiesList.add(commodities);
             //以下为预定订单id和预定时间部分
@@ -526,10 +521,9 @@ public class UserCenterController {
      * @return map
      * @throws ParamNotFoundException 参数缺失
      * @throws UserNotFoundException 用户不存在
-     * @throws CommodityNotFoundException 商品不存在
      */
     @RequestMapping(value = "/userBookings/search", method = RequestMethod.POST)
-    private Map<String, Object> userBookingsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException, CommodityNotFoundException {
+    private Map<String, Object> userBookingsBySearching(@RequestBody Map<String, Object> userIdMap) throws ParamNotFoundException, UserNotFoundException {
         logger.info("==========执行请求我预订的商品列表==========");
         logger.info("请求体为：" + userIdMap);
         Integer userId = (Integer) userIdMap.get("userId");//获取用户id
@@ -553,8 +547,8 @@ public class UserCenterController {
             //以下为商品部分
             Integer cmId = reserve.getCmId();//获取这个buy的商品id
             Commodities commodities = userCenterService.getCommoditiesByCmId(cmId);//根据商品id获取这个商品的详情
-            if (commodities == null) {//应该不会没有的叭，不过写上好过没写
-                throw new CommodityNotFoundException("商品不存在");
+            if (commodities == null) {//如果商品信息不存在就跳过
+                continue;
             }
             String name = commodities.getName();
             if (name.contains(search)) {
@@ -631,7 +625,7 @@ public class UserCenterController {
             throw new ParamNotFoundException("cmId参数为空");
         }
         logger.info("userId = " + userId + "正在取消预订cmId = " + cmId + "的商品");
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (userCenterService.deleteReserve(cmId)) {
             map.put("errorCode", 0);
             map.put("success", true);

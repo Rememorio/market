@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.RuntimeErrorException;
+
 @Service
 public class CommodityServiceImpl implements CommodityService {
     @Autowired
@@ -98,6 +100,9 @@ public class CommodityServiceImpl implements CommodityService {
     @Override
     public Boolean addReserve(Reserve reserve) {
         Commodity commodity = commodityMapper.getCommodityByCmId(reserve.getCmId());
+        if (commodity == null) {
+            throw new RuntimeException("商品不存在，无法预定");
+        }
         if (commodity.getState() != 2) {
             throw new RuntimeException("该商品状态不为审核通过，无法预订");
         }

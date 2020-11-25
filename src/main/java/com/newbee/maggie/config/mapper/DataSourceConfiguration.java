@@ -47,7 +47,7 @@ public class DataSourceConfiguration {
         // 连接池最大线程数
         dataSource.setMaxPoolSize(100);
         // 连接池最小线程数
-        dataSource.setMinPoolSize(10);
+        dataSource.setMinPoolSize(1);
         // 关闭连接后不自动commit
         dataSource.setAutoCommitOnClose(false);
         // 连接超时时间
