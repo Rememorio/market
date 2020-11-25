@@ -49,6 +49,54 @@ public class CommodityController {
         if (commodity == null) {
             throw new CommodityNotFoundException("商品不存在");
         }
+        //商品状态：int,1-待审核，2-审核通过，3-审核不通过，4-被预定 ，5-已付款 售出，6-被举报
+        int state = commodity.getState();
+        //是否被预定
+        if (state == 4) {
+            Reserve reserve = commodityService.getReserveByCmId(cmId);
+            if (reserve == null) {
+                map.put("reserved", false);
+                map.put("content", "奇怪了，商品被预订了但是没有这个预定记录");
+            } else {
+                Integer reserveUserId = reserve.getUserId();
+                if (reserveUserId == null) {
+                    map.put("reserved", false);
+                    map.put("content", "见鬼了，有这个预订记录但是找不到这个用户");
+                } else {
+                    String reserveInfo = commodityService.getContactInfoByUserId(reserveUserId);
+                    map.put("reserved", true);
+                    map.put("reserveTime", reserve.getReserveTime());
+                    map.put("reserveId", reserve.getReserveId());
+                    map.put("reservoirInfo", reserveInfo);
+                }
+            }
+        } else {
+            map.put("reserved", false);
+        }
+        //是否售出
+        if (state == 5) {
+            Buy buy = commodityService.getBuyByCmId(cmId);
+            if (buy == null) {
+                map.put("sold", false);
+                map.put("content", "奇怪了，商品被购买了但是没有这个购买记录");
+            } else {
+                Integer buyUserId = buy.getUserId();
+                if (buyUserId == null) {
+                    map.put("sold", false);
+                    map.put("content", "见鬼了，有这个购买记录但是找不到这个用户");
+                } else {
+                    String buyInfo = commodityService.getContactInfoByUserId(buyUserId);
+                    map.put("sold", true);
+                    map.put("timeOfReserve", buy.getTimeOfReserve());
+                    map.put("timeOfTransaction", buy.getTimeOfTransaction());
+                    map.put("orderId", buy.getOrderId());
+                    map.put("buyerInfo", buyInfo);
+                }
+            }
+        } else {
+            map.put("sold", false);
+        }
+        //是否被收藏
         Integer userId = commodity.getUserId();
         String contactInfo = commodityService.getContactInfoByUserId(userId);
         if (userIdReq != -1) {
@@ -58,6 +106,8 @@ public class CommodityController {
             map.put("collected", false);
         }
         map.put("contactInfo", contactInfo);
+
+
         map.put("errorCode", 0);
         //处理图片url，以","作为分隔符
         String pictureUrl = commodity.getPictureUrl();

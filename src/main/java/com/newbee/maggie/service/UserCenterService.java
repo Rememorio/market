@@ -1,7 +1,6 @@
 package com.newbee.maggie.service;
 
 import com.newbee.maggie.entity.*;
-import com.newbee.maggie.util.CommodityNotFoundException;
 import com.newbee.maggie.web.ResponseVO;
 import com.newbee.maggie.web.UserInfoVO;
 import com.newbee.maggie.web.WxLoginVO;
@@ -42,14 +41,14 @@ public interface UserCenterService {
      * @param user
      * @return
      */
-    public boolean updateUser(User user);
+    public Boolean updateUser(User user);
 
     /**
      * 删除用户
      * @param userId
      * @return
      */
-    public boolean deleteUserByUserId(Integer userId);
+    public Boolean deleteUserByUserId(Integer userId);
 
     /**
      * 通过商品id查找商品

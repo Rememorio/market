@@ -17,7 +17,7 @@ public interface BuyMapper {
      * @param cmId
      * @return
      */
-    List<Buy> getBuyByCmId(Integer cmId);
+    Buy getBuyByCmId(Integer cmId);
 
     /**
      * 获取Buy表元组数，方便生成orderId

@@ -77,7 +77,7 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Transactional
     @Override
-    public boolean updateUser(User user) {
+    public Boolean updateUser(User user) {
         // 空值判断，主要是判断userName不为空
         if (user.getNickname() != null && user.getNickname().trim().length() != 0 && !user.getNickname().equals("")) {
             try {
@@ -98,7 +98,7 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Transactional
     @Override
-    public boolean deleteUserByUserId(Integer userId) {
+    public Boolean deleteUserByUserId(Integer userId) {
         // 判断用户id是否为空
         if (userId > 0) {
             try {

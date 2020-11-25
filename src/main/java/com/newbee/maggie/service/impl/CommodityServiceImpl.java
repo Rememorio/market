@@ -56,13 +56,23 @@ public class CommodityServiceImpl implements CommodityService {
     }
 
     @Override
-    public boolean getIsCollected(Integer userId, Integer cmId) {
+    public Boolean getIsCollected(Integer userId, Integer cmId) {
         Collect collect = new Collect(userId, cmId);
         Collect collectTarget = collectMapper.getCollectByUserIdAndCmId(collect);
         if (collectTarget == null) {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Reserve getReserveByCmId(Integer cmId) {
+        return reserveMapper.getReserveByCmId(cmId);
+    }
+
+    @Override
+    public Buy getBuyByCmId(Integer cmId) {
+        return buyMapper.getBuyByCmId(cmId);
     }
 
     @Transactional  //加上事务控制  当抛出RuntimeException异常  事务就会回滚

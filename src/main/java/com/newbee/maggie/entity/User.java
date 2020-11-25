@@ -81,6 +81,7 @@ public class User {
     }
 
     //重写toString方法
+
     @Override
     public String toString() {
         return "User{" +
@@ -92,4 +93,5 @@ public class User {
                 ", authority=" + authority +
                 '}';
     }
+
 }

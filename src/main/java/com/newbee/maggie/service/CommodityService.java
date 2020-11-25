@@ -30,7 +30,21 @@ public interface CommodityService {
      * @param cmId
      * @return
      */
-    public boolean getIsCollected(Integer userId, Integer cmId);
+    public Boolean getIsCollected(Integer userId, Integer cmId);
+
+    /**
+     * 获取商品的预定信息
+     * @param cmId
+     * @return
+     */
+    public Reserve getReserveByCmId(Integer cmId);
+
+    /**
+     * 获取商品的购买信息
+     * @param cmId
+     * @return
+     */
+    public Buy getBuyByCmId(Integer cmId);
 
     /**
      * 收藏商品
