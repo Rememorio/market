@@ -53,7 +53,7 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Transactional  //加上事务控制  当抛出RuntimeException异常  事务就会回滚
     @Override
-    public boolean addUser(User user) {
+    public Boolean addUser(User user) {
         // 判定数据库里面有没有这个人
         User userTemp = userMapper.getUserByUserId(user.getUserId());
         if (userTemp != null)

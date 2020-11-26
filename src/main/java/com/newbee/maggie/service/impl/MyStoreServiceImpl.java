@@ -151,8 +151,9 @@ public class MyStoreServiceImpl implements MyStoreService {
                 int effectedNum = commodityMapper.updateCommodity(commodity);
                 if (effectedNum > 0) {
                     // 更新成功了就把服务器上的旧的图片一起删除
-                    Map<String, Integer> deleteMap = deleteUrl(pictureUrl);
-                    logger.info("删除情况：" + deleteMap);
+                    // 这里先不删了
+                    //Map<String, Integer> deleteMap = deleteUrl(pictureUrl);
+                    //logger.info("删除情况：" + deleteMap);
                     return true;
                 } else {
                     throw new RuntimeException("更新商品信息失败");

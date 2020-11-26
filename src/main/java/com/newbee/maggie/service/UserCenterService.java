@@ -34,7 +34,7 @@ public interface UserCenterService {
      * @param user
      * @return
      */
-    public boolean addUser(User user);
+    public Boolean addUser(User user);
 
     /**
      * 更新用户信息
