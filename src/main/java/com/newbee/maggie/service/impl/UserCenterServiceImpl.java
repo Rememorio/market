@@ -169,10 +169,13 @@ public class UserCenterServiceImpl implements UserCenterService {
         logger.info("返回参数：" + result);
         WxAuthVO wxAuthVO = JSONObject.parseObject(result, WxAuthVO.class);
         logger.info("openid&sessionKey: " + wxAuthVO);
+        logger.info("登录的signature：" + loginVO.getSignature());
+        logger.info("校验的signature：" + WxUtils.getSignature(loginVO.getRawData(),wxAuthVO.getSession_key()));
         //如果签名不一致
-        if(!loginVO.getSignature().equals(WxUtils.getSignature(loginVO.getRawData(),wxAuthVO.getSession_key()))){
-            return new ResponseVO<UserInfoVO>(MsgError.WX_SIGNATURE.code(), MsgError.WX_SIGNATURE.getErrorMsg(),null);
-        }
+//        if(!loginVO.getSignature().equals(WxUtils.getSignature(loginVO.getRawData(),wxAuthVO.getSession_key()))){
+//            logger.info("微信签名不一致");
+//            return new ResponseVO<UserInfoVO>(MsgError.WX_SIGNATURE.code(), MsgError.WX_SIGNATURE.getErrorMsg(),null);
+//        }
         //如果成功获取到openid
         if (wxAuthVO.getOpenid() != null) {
             logger.info("成功获取openId：" + wxAuthVO.getOpenid());
